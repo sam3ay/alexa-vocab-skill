@@ -9,10 +9,16 @@
   },
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
-    "formulahendry.code-runner",
-    "eamodio.gitlens",
-    "yzhang.markdown-all-in-one"
-  ],
+	"formulahendry.code-runner",
+	"eamodio.gitlens",
+	"yzhang.markdown-all-in-one",
+	"anfuchs.alexa-code-snippets",
+	"mark-tucker.ask-cli-configure",
+	"ask-toolkit.alexa-skills-kit-toolkit",
+	"christian-kohler.npm-intellisense",
+	"eg2.vscode-npm-script",
+	"chris-noring.node-snippets"
+],
   "mounts": [
     "source=${localEnv:USERPROFILE}/data,target=/data,type=bind,consistency=cached"
   ],
