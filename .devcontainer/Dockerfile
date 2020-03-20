@@ -21,7 +21,3 @@ RUN mkdir -p /home/$USERNAME/.vscode-server/extensions \
 	&& chown -R $USERNAME \
 	/home/$USERNAME/.vscode-server \
 	/home/$USERNAME/.vscode-server-insiders
-
-WORKDIR /home/${USERNAME}
-
-RUN git clone https://github.com/sam3ay/alexa-vocab-skill.git
