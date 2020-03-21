@@ -4,12 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
-  "author": "",
+  "author": "sam3ay",
   "license": "ISC",
   "dependencies": {
     "ask-sdk-core": "^2.0.0",
     "ask-sdk-model": "^1.0.0"
+  },
+  "devDependencies": {
+    "fast-check": "^1.23.0",
+    "jest": "^25.1.0"
   }
 }
