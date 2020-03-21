@@ -14,6 +14,8 @@ LABEL maintainer="Sam AY <sam3ay@gmail.com>"
 #    && apt-get clean -y \
 #    && rm -rf /var/lib/apt/lists/*
 # ENV DEBIAN_FRONTEND=dialog
+RUN npm install --save-dev alexa-skill-test-framework jest 
+
 ARG USERNAME=node
 
 RUN mkdir -p /home/$USERNAME/.vscode-server/extensions \
@@ -21,3 +23,4 @@ RUN mkdir -p /home/$USERNAME/.vscode-server/extensions \
 	&& chown -R $USERNAME \
 	/home/$USERNAME/.vscode-server \
 	/home/$USERNAME/.vscode-server-insiders
+	
