@@ -3,19 +3,6 @@
 FROM sam3ay/ask-cli:latest
 LABEL maintainer="Sam AY <sam3ay@gmail.com>"
 
-# ** [Optional] Uncomment this section to install additional packages. **
-#
-# ENV DEBIAN_FRONTEND=noninteractive
-# RUN apt-get update \
-#    && apt-get -y install --no-install-recommends <your-package-list-here> \
-#    #
-#    # Clean up
-#    && apt-get autoremove -y \
-#    && apt-get clean -y \
-#    && rm -rf /var/lib/apt/lists/*
-# ENV DEBIAN_FRONTEND=dialog
-RUN npm install --save-dev alexa-skill-test-framework jest 
-
 ARG USERNAME=node
 
 RUN mkdir -p /home/$USERNAME/.vscode-server/extensions \
@@ -23,4 +10,3 @@ RUN mkdir -p /home/$USERNAME/.vscode-server/extensions \
 	&& chown -R $USERNAME \
 	/home/$USERNAME/.vscode-server \
 	/home/$USERNAME/.vscode-server-insiders
-	
