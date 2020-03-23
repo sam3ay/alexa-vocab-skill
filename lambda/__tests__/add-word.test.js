@@ -1,8 +1,8 @@
 const app = require("..");
 const fc = require("fast-check");
 //
-describe('addWordToList', () => {
+describe('lookUpWord', () => {
 	it("given an invalid word", () => {
-		expect(() => addword("notaword")).toThrowError(/Word/);
+		expect(() => lookUpWord("notaword", mock_cred)).toThrowError(/Word/);
 	});
 });
