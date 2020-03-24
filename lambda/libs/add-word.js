@@ -1,40 +1,38 @@
-const got = require('got');
-
+const got = require("got");
 
 function addWord(def_list) {
 	try {
 	}
-	catch 
+	catch {
+	}
 }
 
 /**
- * 
- * @param {string} word search parameter
- * @param {object} credentials contains id and key for oxford api
- */
+	* 
+	* @param {string} word search parameter
+	* @param {object} credentials contains id and key for oxford api
+	*/
 async function lookUpWord(word) {
-	const app_id = process.env.OXFORD_APP_ID;	// Get this from the Oxford dictionary API webpage
-	const app_key = process.env.OXFORD_APP_KEY; // Get this from the Oxford dictionary API webpage
+	let app_id = process.env.oxford_app_id;	// get this from the oxford dictionary api webpage
+	let app_key = process.env.oxford_app_key; // get this from the oxford dictionary api webpage
 	// determines fields returned strict maching prevents homographs
-	const path = "fields=definitions&strictMatch=true";
+	const path = "fields=definitions&strictmatch=true";
 	// accepts json provides credentials
 	const options = {
-		hostname: "https://od-api.oxforddictionaries.com",
-		port: "443",
-		pathname: `/api/v2/entries/en/${word}?${path}`,
+		host: 'od-api.oxforddictionaries.com',
+		path: `/api/v2/entries/en-gb/${word}?fields=definitions&strictMatch=True`,
 		method: "GET",
-		header = {
-			"Accept": "application/json",
-			"app_id": app_id,
-			"app_key": app_key,
-		},
+		headers: {
+			'app_id': app_id,
+			'app_key': app_key,
+		}
 	};
-	// 404 error if word isn't found 400 if wrong fields
-	// TODO switch case specific error handling
 	try {
-		const word_data = await got(options)
+		let response = await got("https://od-api.oxforddictionaries.com", options).json();
+		console.log(await response);
+		// main_def = test_get.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0]
+		let definitions = retrieveDefinition(response)
 	} catch (error) {
-		throw "can't find that word"
+		Errorhandler(error)
 	}
-	return word_data
-}
+};

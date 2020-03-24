@@ -3,6 +3,9 @@ lambda/node_modules
 .ask/
 hooks/
 
+# Vscode
+.vscode/settings.json
+
 ## Github gitignore (node)
 # Logs
 logs
