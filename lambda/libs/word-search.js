@@ -1,5 +1,5 @@
 const got = require("got");
-const ErrorHandler = require(../handler/errorhandler.js)
+const ErrorHandler = require("../handler/errorhandler.js")
 
 /**
 	* Searches Oxford dictionary for the definition of a word
