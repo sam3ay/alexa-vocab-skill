@@ -3,7 +3,7 @@ const LaunchRequestHandler = require('./launch-handler');
 const HelpHandler = require('./help-handler');
 const ExitHandler = require('./exit-handler');
 const RepeatHandler = require('./repeat-handler');
-const ErrorHandler = require('./error-handler');
+const ErrorHandler = require('./errorhandler');
 
 const QuizHandler = require('./quiz-handler');
 const QuizAnswerHandler = require('./quiz-answer-handler');

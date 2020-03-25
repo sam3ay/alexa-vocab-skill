@@ -1,15 +1,8 @@
 const got = require("got");
 const ErrorHandler = require(../handler/errorhandler.js)
 
-function addWord(def_list) {
-	try {
-	}
-	catch {
-	}
-}
-
 /**
-	* 
+	* Searches Oxford dictionary for the definition of a word
 	* @param {string} word search parameter
 	* @param {object} credentials contains id and key for oxford api
 	*/
@@ -43,7 +36,7 @@ async function lookUpWord(word) {
 
 
 /**
- * 
+ * Extracts information from array of objects 
  * @param {array} response_array Nested array of objects
  * @param {string} metadata Path of metadata in nested array
  * @param {string} identifier Value being searched
