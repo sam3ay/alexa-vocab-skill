@@ -15,7 +15,6 @@ module.exports = {
 	ExitHandler,
 	RepeatHandler,
 	ErrorHandler,
-	SessionEndedRequestHandler,
 	QuizHandler,
 	QuizAnswerHandler,
 	DefinitionHandler,

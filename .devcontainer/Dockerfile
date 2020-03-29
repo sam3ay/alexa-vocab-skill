@@ -6,7 +6,10 @@ LABEL maintainer="Sam AY <sam3ay@gmail.com>"
 ARG USERNAME=node
 
 RUN mkdir -p /home/$USERNAME/.vscode-server/extensions \
-	/home/$USERNAME/.vscode-server-insiders/extensions \
-	&& chown -R $USERNAME \
-	/home/$USERNAME/.vscode-server \
-	/home/$USERNAME/.vscode-server-insiders
+    /home/$USERNAME/.vscode-server-insiders/extensions \
+    && chown -R $USERNAME \
+    /home/$USERNAME/.vscode-server \
+    /home/$USERNAME/.vscode-server-insiders
+
+RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/data/.bash_history" \
+    && echo $SNIPPET >> "/home/$USERNAME/.bashrc" 

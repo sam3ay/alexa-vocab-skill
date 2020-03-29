@@ -1,9 +1,8 @@
-const app = require("..");
 const fc = require("fast-check");
-const got = jest.genMockOFromModule('got');
+const got = require('got');
 const nock = require("nock");
-
-results = [
+const lookUpWord = require("../libs/word-search");
+const results = [
 	{
 		"id": "bear",
 		"language": "en-gb",
@@ -197,7 +196,9 @@ results = [
 ]
 
 function generateResponse(word, randdef1, randdef2, randdef3) {
-	header_ret = {
+	let app_id = "app_id";
+	let app_key = "app_key";
+	const header_ret = {
 		"api_version": "v2",
 		"code_version": "leap2-v2.6.0-ge749fd1",
 		"connection": "keep-alive",
@@ -208,7 +209,7 @@ function generateResponse(word, randdef1, randdef2, randdef3) {
 		"server": "openresty/1.17.4.1rc0",
 		"x-request-id": "3ded642bc492d929c67d1e79b1c262d0"
 	};
-	response_body = {
+	const response_body = {
 		"id": word,
 		"metadata": {
 			"operation": "retrieve",
@@ -361,44 +362,74 @@ function generateResponse(word, randdef1, randdef2, randdef3) {
 		],
 		"word": word
 	}
-	const response = nock("od-api.oxforddictionaries.com", {
+	const response = nock("https://od-api.oxforddictionaries.com", {
 		reqheaders: {
-			'app_id': "app_id",
-			'app_key': "app_key",
+			'app_id': app_id,
+			'app_key': app_key,
 		},
 	})
+		.log(console.log)
+		.persist()
 		.get(`/api/v2/entries/en-gb/${word}?fields=definitions&strictMatch=True`)
-		.defaultReplyHeader(
-			header_ret
-		)
 		.reply(200, response_body)
+	return response
 }
-// Integration Test, Looking up a word in a dictionary
+
+function reply_error() {
+	let app_id = "app_id";
+	let app_key = "app_key";
+
+	const error_body = {
+		"error": "No entry found matching supplied source_lang, word and provided filters"
+	}
+
+	const response = nock("https://od-api.oxforddictionaries.com", {
+		reqheaders: {
+			'app_id': app_id,
+			'app_key': app_key,
+		},
+	})
+		.log(console.log)
+		.get(`/api/v2/entries/en-gb/notaword?fields=definitions&strictMatch=True`)
+		.reply(404, error_body)
+}
+
+// Component Test, Looking up a word in a dictionary
 describe('Word Lookup', () => {
 	it("Given an invalid word, return an error(404) message", async () => {
 		expect.assertions(1);
-		error_msg = await lookUpWord("notaword");
-		expect(error_msg).toEqual("/404/")
+		reply_error()
+		searchword = await lookUpWord("notaword")
+		expect(searchword).toEqual("404");
 	});
 	it("Given a valid word, retrieve list of nested lists with definitions and part of speech", async () => {
-		expect.assertions(1);
 		fc.assert(
 			fc.asyncProperty(
-				fc.string(30),
+				fc.asciiString(30),
 				fc.lorem(15, true),
 				fc.lorem(25, true),
 				fc.lorem(35, true),
-				(word, def1, def2, def3) => {
+				async (word, def1, def2, def3) => {
 					generateResponse(word, def1, def2, def3);
-					definitions = [def1, def2, def3,];
-					expect(lookUpWord(word)).toEqual(definitions);
+					const word_lookup_ans = [['Part', '(of a person) carry'],
+					['Part', '(of a vehicle or boat) convey (passengers or cargo)'], ['Part', 'have or display as a visible mark or feature'],
+					['Part', 'be called by (a name or title)'],
+					['Adjective', def1],
+					['Adjective', 'relating to a person or group favouring radical, reforming, or socialist views; left wing'],
+					['Adverb', 'on or to the left side'],
+					['Noun', def2],
+					['Noun',
+						'(in soccer or a similar sport) the left-hand half of the field when facing the opponents\'s goal'],
+					['Noun', def3],
+					['Noun', 'a left turn'],
+					['Noun', 'a road, entrance, etc. on the left'],
+					['Noun', 'a person\'s left fist, especially a boxer\'s'],
+					['Noun', 'a blow given with the left fist'],
+					['Noun',
+						'a group or party favouring radical, reforming, or socialist views']];
+					expect(await lookUpWord(word)).toEqual(word_lookup_ans);
 				}
 			)
 		)
 	});
 });
-
-describe('Word Search', () => {
-	it("Sending a correctly structured request") {
-	}
-})

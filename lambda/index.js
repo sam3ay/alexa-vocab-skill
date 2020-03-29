@@ -23,7 +23,6 @@ const {
   ExitHandler,
   RepeatHandler,
   ErrorHandler,
-  SessionEndedRequestHandler,
   QuizHandler,
   QuizAnswerHandler,
   DefinitionHandler,
