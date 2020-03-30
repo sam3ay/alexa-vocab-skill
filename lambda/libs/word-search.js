@@ -23,16 +23,13 @@ async function lookUpWord(word) {
 			},
 			retry: 0
 		};
-		console.log("here")
 		const response = await got("https://od-api.oxforddictionaries.com", options);
 		// main_def = test_get.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0]
-		results = response.results;
-		// definitions = retrieveDefinition(results);
-		// console.log(definitions)
-		// return definitions;
-		return results
+		let results = response.results;
+		let definitions = retrieveDefinition(results);
+		console.log(definitions)
+		return definitions;
 	} catch (error) {
-		console.log("there")
 		return "404"
 		// return await ErrorHandler(error);
 	};
@@ -81,4 +78,7 @@ function retrieveDefinition(response_array, metadata_path = "lexicalCategory", i
 	}
 }
 
-module.exports = lookUpWord;
+module.exports = {
+	lookUpWord,
+	retrieveDefinition
+}
