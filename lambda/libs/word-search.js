@@ -1,5 +1,5 @@
 const got = require("got");
-const ErrorHandler = require("../handlers/errorhandler.js")
+// const ErrorHandler = require("../handlers/errorhandler.js")
 
 /**
 	* Searches Oxford dictionary for the definition of a word
@@ -27,7 +27,6 @@ async function lookUpWord(word) {
 		// main_def = test_get.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0]
 		let results = response.results;
 		let definitions = retrieveDefinition(results);
-		console.log(definitions)
 		return definitions;
 	} catch (error) {
 		return "404"
@@ -42,40 +41,36 @@ async function lookUpWord(word) {
  * @param {string} identifier Value being searched
  */
 function retrieveDefinition(response_array, metadata_path = "lexicalCategory", identifier = "definitions") {
-	var definition_list = []
+	var definition_list = [];
 	function parseResult(response_array, metadata) {
 		// Confirm object type
-		try {
+		if (Array.isArray(response_array)) {
 			response_array.forEach((item) => {
-				// lexicalEntries provides part of speech for all entries attributes
-				if (item[metadata_path]) {
-					metadata = item[metadata_path].text
-				} else if (item[identifier]) {
-					// update definitions array with list of metadata and definition
-					definition_list.push([metadata, item[identifier][0]]);
-				}
-				if (typeof item === 'object' && item !== null) {
-					// If item is a non-null object, (therefore not a primitive)
-					// Iterate over properties items # Could be exported
-					for (element in item) {
-						parseResult(item[element], metadata)
+				try {
+					// lexicalEntries provides part of speech for all entries attributes
+					if (item.hasOwnProperty(metadata_path)) {
+						metadata = item[metadata_path].text;
+					} else if (item.hasOwnProperty(identifier)) {
+						// update definitions array with list of metadata and definition
+						definition_list.push([metadata, item[identifier][0]]);
 					}
+					parseResult(item, metadata);
+				} catch (err) {
+					console.log(response_array);
+					console.log(item);
+					parseResult(item, metadata);
 				}
-				parseResult(item, metadata);
 			})
-		} catch (error) {
-			if (error == "TypeError") {
-				// Primitive/null encountered
+		} else if (typeof response_array === 'object' && response_array !== null) {
+			// If item is a non-null object, (therefore not a primitive)
+			// Iterate over properties items # Could be exported
+			for (const element in response_array) {
+				parseResult(response_array[element], metadata);
 			}
 		}
 	}
-	try {
-		parseResult(response_array)
-		return definition_list
-	} catch (error) {
-		console.log(error)
-		return ErrorHandler(error)
-	}
+	parseResult(response_array);
+	return definition_list;
 }
 
 module.exports = {

@@ -265,9 +265,9 @@ describe('Word Lookup', () => {
 	it("Given a valid word, retrieve list of nested lists with definitions and part of speech", () => {
 		fc.assert(
 			fc.property(
-				fc.hexaString(2, 5),
-				fc.hexaString(2, 5),
-				fc.hexaString(2, 5),
+				fc.string(2, 5),
+				fc.string(2, 5),
+				fc.string(2, 5),
 				(def1, def2, def3) => {
 					let test_results = generateResponse(def1, def2, def3);
 					const word_lookup_ans = [['Part', '(of a person) carry'],
@@ -297,7 +297,6 @@ describe('Word Lookup', () => {
 						'something that is very difficult or unpleasant to deal with'],
 					['Noun',
 						'a person who sells shares hoping to buy them back later at a lower price.']]
-					console.log(test_results)
 					let respond = retrieveDefinition(test_results);
 					expect(respond).toEqual(word_lookup_ans);
 				}

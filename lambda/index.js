@@ -52,17 +52,6 @@ const useCardsFlag = true;
 
 /* HELPER FUNCTIONS */
 
-// returns true if the skill is running on a device with a display (show|spot)
-function supportsDisplay(handlerInput) {
-  var hasDisplay =
-    handlerInput.requestEnvelope.context &&
-    handlerInput.requestEnvelope.context.System &&
-    handlerInput.requestEnvelope.context.System.device &&
-    handlerInput.requestEnvelope.context.System.device.supportedInterfaces &&
-    handlerInput.requestEnvelope.context.System.device.supportedInterfaces.Display
-  return hasDisplay;
-}
-
 function getBadAnswer(item) {
   return `I'm sorry. ${item} is not something I know very much about in this skill. ${helpMessage}`;
 }
@@ -261,6 +250,7 @@ function shuffle(array) {
 
 /* LAMBDA SETUP */
 exports.handler = skillBuilder
+  .withSkillId("amzn1.ask.skill.1")
   .addRequestHandlers(
     LaunchRequestHandler,
     QuizHandler,
