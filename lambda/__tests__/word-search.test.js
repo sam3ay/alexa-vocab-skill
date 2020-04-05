@@ -262,6 +262,7 @@ describe('Word Lookup', () => {
 		let searchword = await lookUpWord("notaword")
 		expect(searchword).toEqual("404");
 	});
+	// Testing definition retrieval
 	it("Given a valid word, retrieve list of nested lists with definitions and part of speech", () => {
 		fc.assert(
 			fc.property(
