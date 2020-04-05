@@ -265,11 +265,11 @@ describe('Word Lookup', () => {
 	it("Given a valid word, retrieve list of nested lists with definitions and part of speech", () => {
 		fc.assert(
 			fc.property(
-				fc.string(2, 5),
-				fc.string(2, 5),
-				fc.string(2, 5),
+				fc.lorem(10, true),
+				fc.lorem(15, true),
+				fc.lorem(20, true),
 				(def1, def2, def3) => {
-					let test_results = generateResponse(def1, def2, def3);
+					let test_results = generateResponse("bear", def1, def2, def3);
 					const word_lookup_ans = [['Part', '(of a person) carry'],
 					['Part',
 						'(of a vehicle or boat) convey (passengers or cargo)'],
@@ -303,7 +303,7 @@ describe('Word Lookup', () => {
 			),
 			{
 				verbose: true,
-				numRuns: 1
+				numRuns: 20
 			})
 	});
 })

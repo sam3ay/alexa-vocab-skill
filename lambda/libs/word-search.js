@@ -46,20 +46,14 @@ function retrieveDefinition(response_array, metadata_path = "lexicalCategory", i
 		// Confirm object type
 		if (Array.isArray(response_array)) {
 			response_array.forEach((item) => {
-				try {
-					// lexicalEntries provides part of speech for all entries attributes
-					if (item.hasOwnProperty(metadata_path)) {
-						metadata = item[metadata_path].text;
-					} else if (item.hasOwnProperty(identifier)) {
-						// update definitions array with list of metadata and definition
-						definition_list.push([metadata, item[identifier][0]]);
-					}
-					parseResult(item, metadata);
-				} catch (err) {
-					console.log(response_array);
-					console.log(item);
-					parseResult(item, metadata);
+				// lexicalEntries provides part of speech for all entries attributes
+				if (item.hasOwnProperty(metadata_path)) {
+					metadata = item[metadata_path].text;
+				} else if (item.hasOwnProperty(identifier)) {
+					// update definitions array with list of metadata and definition
+					definition_list.push([metadata, item[identifier][0]]);
 				}
+				parseResult(item, metadata);
 			})
 		} else if (typeof response_array === 'object' && response_array !== null) {
 			// If item is a non-null object, (therefore not a primitive)
