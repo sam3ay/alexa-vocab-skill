@@ -5,6 +5,17 @@
 // Display Interface for your skill should be enabled through the Amazon developer console
 // See this screenshot - https://alexa.design/enabledisplay
 
+import {
+  LaunchRequestHandler,
+  AddWordHandler,
+  HelpHandler,
+  ExitHandler,
+  RepeatHandler,
+  ErrorHandler,
+  QuizHandler,
+  QuizAnswerHandler,
+} from './handlers';
+
 const SessionEndedRequestHandler = {
   canHandle(handlerInput) {
     console.log("Inside SessionEndedRequestHandler");
@@ -16,17 +27,6 @@ const SessionEndedRequestHandler = {
   },
 
 };
-
-const {
-  LaunchRequestHandler,
-  HelpHandler,
-  ExitHandler,
-  RepeatHandler,
-  ErrorHandler,
-  QuizHandler,
-  QuizAnswerHandler,
-  DefinitionHandler,
-} = require('./handlers');
 
 const Alexa = require('ask-sdk-core');
 
@@ -43,7 +43,6 @@ const states = {
   QUIZ: `_QUIZ`,
 };
 
-const welcomeMessage = `Welcome to the United States Quiz Game!  You can ask me about any of the fifty states and their capitals, or you can ask me to start a quiz.  What would you like to do?`;
 const startQuizMessage = `OK.  I will ask you 10 questions about the United States. `;
 const exitSkillMessage = `Thank you for playing the United States Quiz Game!  Let's play again soon!`;
 const repromptSpeech = `Which other state or capital would you like to know about?`;
@@ -66,26 +65,6 @@ function getFinalScore(score, counter) {
 
 function getCardTitle(item) {
   return item.StateName;
-}
-
-function getSmallImage(item) {
-  return `https://m.media-amazon.com/images/G/01/mobile-apps/dex/alexa/alexa-skills-kit/tutorials/quiz-game/state_flag/720x400/${item.Abbreviation}._TTH_.png`;
-}
-
-function getLargeImage(item) {
-  return `https://m.media-amazon.com/images/G/01/mobile-apps/dex/alexa/alexa-skills-kit/tutorials/quiz-game/state_flag/1200x800/${item.Abbreviation}._TTH_.png`;
-}
-
-function getImage(height, width, label) {
-  return imagePath.replace("{0}", height)
-    .replace("{1}", width)
-    .replace("{2}", label);
-}
-
-function getBackgroundImage(label, height = 1024, width = 600) {
-  return backgroundImagePath.replace("{0}", height)
-    .replace("{1}", width)
-    .replace("{2}", label);
 }
 
 function getSpeechDescription(item) {

@@ -1,21 +1,21 @@
 
-const LaunchRequestHandler = require('./launch-handler');
-const HelpHandler = require('./help-handler');
-const ExitHandler = require('./exit-handler');
-const RepeatHandler = require('./repeat-handler');
-const ErrorHandler = require('./errorhandler');
+import LaunchRequestHandler from './launch-handler';
+import HelpHandler from './help-handler';
+import ExitHandler from './exit-handler';
+import RepeatHandler from './repeat-handler';
+import ErrorHandler from './errorhandler';
 
-const QuizHandler = require('./quiz-handler');
-const QuizAnswerHandler = require('./quiz-answer-handler');
-const DefinitionHandler = require('./definition-handler');
+import QuizHandler from './quiz-handler';
+import QuizAnswerHandler from './quiz-answer-handler';
+import AddWordHandler from './add-word-handler';
 
-module.exports = {
+export {
 	LaunchRequestHandler,
+	AddWordHandler,
 	HelpHandler,
 	ExitHandler,
 	RepeatHandler,
 	ErrorHandler,
 	QuizHandler,
 	QuizAnswerHandler,
-	DefinitionHandler,
 };

@@ -1,4 +1,5 @@
 const Alexa = require('ask-sdk-core');
+const text = require('../libs/text')
 
 const QuizHandler = {
 	canHandle(handlerInput) {
@@ -22,29 +23,6 @@ const QuizHandler = {
 
 		const item = attributes.quizItem;
 		const property = attributes.quizProperty;
-
-		if (supportsDisplay(handlerInput)) {
-			const title = `Question #${attributes.counter}`;
-			const primaryText = new Alexa.RichTextContentHelper().withPrimaryText(getQuestionWithoutOrdinal(property, item)).getTextContent();
-			const backgroundImage = new Alexa.ImageHelper().addImageInstance(getBackgroundImage(attributes.quizItem.Abbreviation)).getImage();
-			const itemList = [];
-			getAndShuffleMultipleChoiceAnswers(attributes.selectedItemIndex, item, property).forEach((x, i) => {
-				itemList.push(
-					{
-						"token": x,
-						"textContent": new Alexa.PlainTextContentHelper().withPrimaryText(x).getTextContent(),
-					}
-				);
-			});
-			response.addRenderTemplateDirective({
-				type: 'ListTemplate1',
-				token: 'Question',
-				backButton: 'hidden',
-				backgroundImage,
-				title,
-				listItems: itemList,
-			});
-		}
 
 		return response.speak(speakOutput)
 			.reprompt(repromptOutput)
