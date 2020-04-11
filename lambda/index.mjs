@@ -232,12 +232,13 @@ exports.handler = skillBuilder
   .withSkillId("amzn1.ask.skill.1")
   .addRequestHandlers(
     LaunchRequestHandler,
-    QuizHandler,
-    DefinitionHandler,
-    QuizAnswerHandler,
-    RepeatHandler,
-    HelpHandler,
-    ExitHandler,
+    AddWordHandler,
+    // QuizHandler,
+    // DefinitionHandler,
+    // QuizAnswerHandler,
+    // RepeatHandler,
+    // HelpHandler,
+    // ExitHandler,
     SessionEndedRequestHandler
   )
   .addErrorHandlers(ErrorHandler)

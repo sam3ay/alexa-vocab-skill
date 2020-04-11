@@ -23,7 +23,7 @@ async function lookUpWord(word) {
 			},
 			retry: 0
 		};
-		const response = await got("https://od-api.oxforddictionaries.com", options);
+		const response = await got("https://od-api.oxforddictionaries.com", options).json();
 		// main_def = test_get.results[0].lexicalEntries[0].entries[0].senses[0].definitions[0]
 		let results = response.results;
 		let definitions = retrieveDefinition(results);
