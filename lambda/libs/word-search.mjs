@@ -1,4 +1,4 @@
-const got = require("got");
+import got from got;
 // const ErrorHandler = require("../handlers/errorhandler.js")
 
 /**
@@ -67,7 +67,7 @@ function retrieveDefinition(response_array, metadata_path = "lexicalCategory", i
 	return definition_list;
 }
 
-module.exports = {
+export {
 	lookUpWord,
 	retrieveDefinition
 }

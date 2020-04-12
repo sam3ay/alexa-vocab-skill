@@ -1,9 +1,8 @@
-const fc = require("fast-check");
-const got = require('got');
-const nock = require("nock");
-const wordsearch = require("../libs/word-search");
-const lookUpWord = wordsearch.lookUpWord
-const retrieveDefinition = wordsearch.retrieveDefinition
+import * as fc from "fast-check";
+import got from 'got';
+import nock from nock;
+import retrieveDefinition from "../lambda/libs/word-search";
+import lookUpWord from "../lambda/libs/word-search";
 
 function generateResponse(word = "bear", def1, def2, def3) {
 	let app_id = "app_id";

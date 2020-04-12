@@ -2,6 +2,7 @@
 lambda/node_modules
 .ask/
 hooks/
+test_output/
 
 # Vscode
 .vscode/settings.json

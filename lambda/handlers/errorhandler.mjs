@@ -1,4 +1,4 @@
-const Alexa = require('ask-sdk-core');
+import * as Alexa from 'ask-sdk-core';
 
 const ErrorHandler = {
 	canHandle() {
@@ -17,4 +17,4 @@ const ErrorHandler = {
 	},
 };
 
-module.exports = ErrorHandler;
+export { ErrorHandler };

@@ -8,8 +8,8 @@ configuration:
   description: My first unit test suite
 ---
 - test : Launch and ask for help
-- LaunchRequest : "Welcome to Vocab-skill"
+- LaunchRequest : "Welcome to vocab skills"
 - AMAZON.HelpIntent :
   - prompt : "What can I help you with?"
   - cardContent : "What can I help you with?"
-  - cardTitle : "Vocab-skill"
+  - cardTitle : "vocab skills"

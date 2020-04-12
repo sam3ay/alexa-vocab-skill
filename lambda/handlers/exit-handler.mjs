@@ -1,4 +1,4 @@
-const Alexa = require('ask-sdk-core');
+import * as Alexa from 'ask-sdk-core';
 
 const ExitHandler = {
 	canHandle(handlerInput) {
@@ -19,4 +19,4 @@ const ExitHandler = {
 	},
 };
 
-module.exports = ExitHandler;
+export { ExitHandler }

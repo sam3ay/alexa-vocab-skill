@@ -5,7 +5,7 @@
 			"type": "node",
 			"request": "launch",
 			"name": "Jest All",
-			"program": "${workspaceFolder}/lambda/node_modules/.bin/jest",
+			"program": "${workspaceFolder}/node_modules/.bin/jest",
 			"args": [
 				"--runInBand"
 			],
@@ -13,14 +13,14 @@
 			"internalConsoleOptions": "neverOpen",
 			"disableOptimisticBPs": true,
 			"windows": {
-				"program": "${workspaceFolder}/lambda/node_modules/jest/bin/jest",
+				"program": "${workspaceFolder}/node_modules/jest/bin/jest",
 			}
 		},
 		{
 			"type": "node",
 			"request": "launch",
 			"name": "Jest Current File",
-			"program": "${workspaceFolder}/lambda/node_modules/.bin/jest",
+			"program": "${workspaceFolder}/node_modules/.bin/jest",
 			"args": [
 				"${fileBasenameNoExtension}",
 				"--config",
@@ -30,7 +30,7 @@
 			"internalConsoleOptions": "neverOpen",
 			"disableOptimisticBPs": true,
 			"windows": {
-				"program": "${workspaceFolder}/lambda/node_modules/jest/bin/jest",
+				"program": "${workspaceFolder}/node_modules/jest/bin/jest",
 			}
 		}
 	]
