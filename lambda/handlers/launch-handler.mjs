@@ -1,4 +1,3 @@
-import * as Alexa from 'ask-sdk-core';
 import text from '../libs/text.mjs';
 const welcomeMessage = text.welcomeMessage
 const helpMessage = text.helpMessage
@@ -15,4 +14,4 @@ const LaunchRequestHandler = {
 	},
 };
 
-export { LaunchRequestHandler };
+export default LaunchRequestHandler;

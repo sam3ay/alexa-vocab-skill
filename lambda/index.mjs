@@ -5,7 +5,7 @@
 // Display Interface for your skill should be enabled through the Amazon developer console
 // See this screenshot - https://alexa.design/enabledisplay
 
-import * as Alexa from 'ask-sdk-core';
+import Alexa from 'ask-sdk-core';
 
 import {
   LaunchRequestHandler,
@@ -14,20 +14,8 @@ import {
   ExitHandler,
   RepeatHandler,
   ErrorHandler,
+  SessionEndedRequestHandler,
 } from './handlers/index.mjs';
-
-const SessionEndedRequestHandler = {
-  canHandle(handlerInput) {
-    console.log("Inside SessionEndedRequestHandler");
-    return handlerInput.requestEnvelope.request.type === 'SessionEndedRequest';
-  },
-  handle(handlerInput) {
-    console.log(`Session ended with reason: ${JSON.stringify(handlerInput.requestEnvelope)}`);
-    return handlerInput.responseBuilder.getResponse();
-  },
-
-};
-
 
 /* CONSTANTS */
 const skillBuilder = Alexa.SkillBuilders.custom();
@@ -35,8 +23,8 @@ const speechConsCorrect = ['Booya', 'All righty', 'Bam', 'Bazinga', 'Bingo', 'Bo
 const speechConsWrong = ['Argh', 'Aw man', 'Blarg', 'Blast', 'Boo', 'Bummer', 'Darn', "D'oh", 'Dun dun dun', 'Eek', 'Honk', 'Le sigh', 'Mamma mia', 'Oh boy', 'Oh dear', 'Oof', 'Ouch', 'Ruh roh', 'Shucks', 'Uh oh', 'Wah wah', 'Whoops a daisy', 'Yikes'];
 
 /* LAMBDA SETUP */
-exports.handler = skillBuilder
-  .withSkillId("amzn1.ask.skill.1")
+// .withSkillId("amzn1ask.skill.1")
+export const handler = skillBuilder
   .addRequestHandlers(
     LaunchRequestHandler,
     AddWordHandler,

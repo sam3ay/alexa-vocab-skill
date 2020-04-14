@@ -1,5 +1,8 @@
-import * as Alexa from 'ask-sdk-core';
-import lookUpWord from '../libs/word-search'
+import { lookUpWord } from '../libs/word-search.mjs'
+import text from '../libs/text.mjs';
+const helpMessage = text.helpMessage
+const addMessage = text.addMessage
+
 /**
  * TODO Add most used definition if add the most popular is spoken
  */
@@ -8,7 +11,6 @@ const AddWordHandler = {
 		console.log("Inside AddWordHandler");
 		const attributes = handlerInput.attributesManager.getSessionAttributes();
 		const request = handlerInput.requestEnvelope.request;
-
 		return request.type === 'IntentRequest' &&
 			request.intent.name === 'AddWordIntent';
 	},
@@ -25,24 +27,21 @@ const AddWordHandler = {
 			attributes.first = 0
 			attributes.last = 4
 			attributes.word = word
-			attributes.setSessionAttributes(attributes)
-		}
-		if (attributes.first >= len("attributes.definitionlist")) {
+		} else if (attributes.first >= attributes.definitionlist.length) {
 			return response.speak("Too long")
 				.reprompt("You know")
 				.getResponse();
-		} else {
-			let [speechOutput, slotDirective] = fillSlotObjects(attributes.definitions, attributes.first, attributes.last)
-			attributes.first += 4
-			attributes.last += 4
-			attributes.setSessionAttributes(attributes)
-			return response.speak(speechOutput)
-				.reprompt("Nothing")
-				.getResponse();
-			// add slot values and request the slot
-			// .addDirective(slotDirective)
-			//.addElicitSlotDirective('definition')
 		}
+		let [speechOutput, slotDirective] = fillSlotObjects(attributes.definitionlist, attributes.first, attributes.last)
+		attributes.first += 4
+		attributes.last += 4
+		handlerInput.attributesManager.setSessionAttributes(attributes)
+		return response.speak(speechOutput)
+			.reprompt(addMessage)
+			.getResponse();
+		// add slot values and request the slot
+		// .addDirective(slotDirective)
+		//.addElicitSlotDirective('definition')
 	}
 };
 
@@ -71,7 +70,7 @@ function fillSlotObjects(inputarray, first, last) {
 		update: 'REPLACE',
 		types: []
 	};
-	for (let i = first; i < last || i < len(inputarray); i++) {
+	for (let i = first; i < last || i < inputarray.length; i++) {
 		let definition = inputarray[i][0] + inputarray[i][1];
 		let entity = {
 			id: `def${i}`,
@@ -82,6 +81,7 @@ function fillSlotObjects(inputarray, first, last) {
 		outString += definition;
 		replaceEntityDirective.types.push(entity);
 	};
+	return [outString, replaceEntityDirective]
 }
 
-export { AddWordHandler };
+export default AddWordHandler;

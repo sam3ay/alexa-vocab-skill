@@ -1,4 +1,5 @@
-import * as Alexa from 'ask-sdk-core';
+import text from '../libs/text.mjs';
+const exitSkillMessage = text.exitSkillMessage
 
 const ExitHandler = {
 	canHandle(handlerInput) {
@@ -19,4 +20,4 @@ const ExitHandler = {
 	},
 };
 
-export { ExitHandler }
+export default ExitHandler;

@@ -5,22 +5,21 @@
   "main": "./lambda/index.js",
   "type": "module",
   "scripts": {
-    "test": "jest"
+    "test": "mocha"
   },
   "author": "sam3ay",
   "license": "ISC",
   "dependencies": {
     "ask-sdk": "^2.8.0",
+    "ask-sdk-model": "^1.28.0",
     "got": "^10.7.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/preset-env": "^7.9.5",
-    "babel-jest": "^25.3.0",
-    "bespoken-tools": "^2.4.55",
+    "ask-sdk-test": "^2.3.0",
+    "chai": "^4.2.0",
     "dotenv": "^8.2.0",
-    "fast-check": "^1.23.0",
-    "jest": "^25.3.0",
+    "fast-check": "^1.24.1",
+    "mocha": "^7.1.1",
     "nock": "^12.0.3"
   }
 }
