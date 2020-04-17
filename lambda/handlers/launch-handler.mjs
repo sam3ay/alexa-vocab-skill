@@ -1,4 +1,6 @@
-const Alexa = require('ask-sdk-core');
+import text from '../libs/handlerhelp.mjs';
+const welcomeMessage = text.welcomeMessage
+const helpMessage = text.helpMessage
 
 const LaunchRequestHandler = {
 	canHandle(handlerInput) {
@@ -12,4 +14,4 @@ const LaunchRequestHandler = {
 	},
 };
 
-module.exports = LaunchRequestHandler;
+export default LaunchRequestHandler;

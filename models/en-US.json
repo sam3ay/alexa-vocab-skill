@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "change me",
+      "invocationName": "vocab skill",
       "intents": [
         {
           "name": "AMAZON.CancelIntent",
@@ -27,52 +27,18 @@
           "name": "AnswerIntent",
           "slots": [
             {
-              "name": "StateName",
-              "type": "AMAZON.US_STATE",
-              "samples": []
+              "name": "definition",
+              "type": "AnyDefinition"
             },
             {
-              "name": "Capital",
-              "type": "AMAZON.US_CITY",
-              "samples": []
-            },
-            {
-              "name": "StatehoodYear",
-              "type": "AMAZON.FOUR_DIGIT_NUMBER",
-              "samples": []
-            },
-            {
-              "name": "Abbreviation",
-              "type": "US_STATE_ABBR",
-              "samples": []
-            },
-            {
-              "name": "StatehoodOrder",
-              "type": "AMAZON.NUMBER",
-              "samples": []
+              "name": "word",
+              "type": "AnyWord"
             }
           ],
           "samples": [
-            "{StateName}",
-            "{Capital}",
-            "{StatehoodYear}",
-            "{StatehoodOrder}",
-            "{Abbreviation}",
-            "tell me about {StateName}",
-            "tell me about {Capital}",
-            "tell me about {StatehoodYear}",
-            "tell me about {StatehoodOrder}",
-            "tell me about {Abbreviation}",
-            "what do you know about {StateName}",
-            "what do you know about {Capital}",
-            "what do you know about {StatehoodYear}",
-            "what do you know about {StatehoodOrder}",
-            "what do you know about {Abbreviation}",
-            "{StateName} information",
-            "{Capital} information",
-            "{StatehoodYear} information",
-            "{StatehoodOrder} information",
-            "{Abbreviation} information"
+            "{word} means {definition}",
+            "The definition of {word} is  {definition}",
+            "{definition}"
           ]
         },
         {
@@ -90,266 +56,163 @@
         {
           "name": "AMAZON.NavigateHomeIntent",
           "samples": []
+        },
+        {
+          "name": "AddWordIntent",
+          "slots": [
+            {
+              "name": "word",
+              "type": "AnyWord",
+              "samples": [
+                "Add {word}"
+              ]
+            },
+            {
+              "name": "moredef",
+              "type": "YesNo"
+            }
+          ],
+          "samples": [
+            "I choose the {moredef}",
+            "Add {word}  to the vocab list",
+            "Add {word}"
+          ]
         }
       ],
       "types": [
         {
+          "name": "AnyWord",
           "values": [
             {
               "name": {
-                "value": "AK"
+                "value": "five"
               }
             },
             {
               "name": {
-                "value": "AL"
+                "value": "four"
               }
             },
             {
               "name": {
-                "value": "AZ"
+                "value": "three"
               }
             },
             {
               "name": {
-                "value": "AR"
+                "value": "two"
               }
             },
             {
               "name": {
-                "value": "CA"
-              }
-            },
-            {
-              "name": {
-                "value": "CO"
-              }
-            },
-            {
-              "name": {
-                "value": "CT"
-              }
-            },
-            {
-              "name": {
-                "value": "DE"
-              }
-            },
-            {
-              "name": {
-                "value": "FL"
-              }
-            },
-            {
-              "name": {
-                "value": "GA"
-              }
-            },
-            {
-              "name": {
-                "value": "HI"
-              }
-            },
-            {
-              "name": {
-                "value": "ID"
-              }
-            },
-            {
-              "name": {
-                "value": "IL"
-              }
-            },
-            {
-              "name": {
-                "value": "IN"
-              }
-            },
-            {
-              "name": {
-                "value": "IA"
-              }
-            },
-            {
-              "name": {
-                "value": "KS"
-              }
-            },
-            {
-              "name": {
-                "value": "KY"
-              }
-            },
-            {
-              "name": {
-                "value": "LA"
-              }
-            },
-            {
-              "name": {
-                "value": "ME"
-              }
-            },
-            {
-              "name": {
-                "value": "MD"
-              }
-            },
-            {
-              "name": {
-                "value": "MA"
-              }
-            },
-            {
-              "name": {
-                "value": "MI"
-              }
-            },
-            {
-              "name": {
-                "value": "MN"
-              }
-            },
-            {
-              "name": {
-                "value": "MS"
-              }
-            },
-            {
-              "name": {
-                "value": "MO"
-              }
-            },
-            {
-              "name": {
-                "value": "MT"
-              }
-            },
-            {
-              "name": {
-                "value": "NE"
-              }
-            },
-            {
-              "name": {
-                "value": "NV"
-              }
-            },
-            {
-              "name": {
-                "value": "NH"
-              }
-            },
-            {
-              "name": {
-                "value": "NJ"
-              }
-            },
-            {
-              "name": {
-                "value": "NM"
-              }
-            },
-            {
-              "name": {
-                "value": "NY"
-              }
-            },
-            {
-              "name": {
-                "value": "NC"
-              }
-            },
-            {
-              "name": {
-                "value": "ND"
-              }
-            },
-            {
-              "name": {
-                "value": "OH"
-              }
-            },
-            {
-              "name": {
-                "value": "OK"
-              }
-            },
-            {
-              "name": {
-                "value": "OR"
-              }
-            },
-            {
-              "name": {
-                "value": "PA"
-              }
-            },
-            {
-              "name": {
-                "value": "RI"
-              }
-            },
-            {
-              "name": {
-                "value": "SC"
-              }
-            },
-            {
-              "name": {
-                "value": "SD"
-              }
-            },
-            {
-              "name": {
-                "value": "TN"
-              }
-            },
-            {
-              "name": {
-                "value": "TX"
-              }
-            },
-            {
-              "name": {
-                "value": "UT"
-              }
-            },
-            {
-              "name": {
-                "value": "VT"
-              }
-            },
-            {
-              "name": {
-                "value": "VA"
-              }
-            },
-            {
-              "name": {
-                "value": "WA"
-              }
-            },
-            {
-              "name": {
-                "value": "WV"
-              }
-            },
-            {
-              "name": {
-                "value": "WI"
-              }
-            },
-            {
-              "name": {
-                "value": "WY"
+                "value": "one"
               }
             }
-          ],
-          "name": "US_STATE_ABBR"
+          ]
+        },
+        {
+          "name": "AnyDefinition",
+          "values": [
+            {
+              "id": "0000",
+              "name": {
+                "value": "See more.",
+                "synonyms": [
+                  "next"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "YesNo",
+          "values": [
+            {
+              "id": "000",
+              "name": {
+                "value": "no",
+                "synonyms": [
+                  "nah",
+                  "no thank you",
+                  "I do not",
+                  "nope"
+                ]
+              }
+            },
+            {
+              "id": "001",
+              "name": {
+                "value": "yes",
+                "synonyms": [
+                  "more",
+                  "You know it",
+                  "yes please",
+                  "I do",
+                  "yeah",
+                  "yep",
+                  "i suppose",
+                  "of course",
+                  "obviously"
+                ]
+              }
+            }
+          ]
         }
       ]
-    }
-  },
-  "version": "1"
+    },
+    "dialog": {
+      "intents": [
+        {
+          "name": "AddWordIntent",
+          "confirmationRequired": true,
+          "prompts": {
+            "confirmation": "Confirm.Intent.1012607185128"
+          },
+          "slots": [
+            {
+              "name": "word",
+              "type": "AnyWord",
+              "confirmationRequired": false,
+              "elicitationRequired": true,
+              "prompts": {
+                "elicitation": "Elicit.Slot.840398552166.1101544451826"
+              }
+            },
+            {
+              "name": "moredef",
+              "type": "YesNo",
+              "confirmationRequired": false,
+              "elicitationRequired": false,
+              "prompts": {}
+            }
+          ]
+        }
+      ],
+      "delegationStrategy": "ALWAYS"
+    },
+    "prompts": [
+      {
+        "id": "Elicit.Slot.840398552166.1101544451826",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "What word would you like to add?"
+          },
+          {
+            "type": "PlainText",
+            "value": "What can I add for you?"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Intent.1012607185128",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Do you want to add {word} to your Vocabulary list?"
+          }
+        ]
+      }
+    ]
+  }
 }

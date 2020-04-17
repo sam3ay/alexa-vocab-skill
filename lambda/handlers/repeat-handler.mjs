@@ -1,5 +1,3 @@
-const Alexa = require('ask-sdk-core');
-
 const RepeatHandler = {
 	canHandle(handlerInput) {
 		console.log("Inside RepeatHandler");
@@ -22,4 +20,4 @@ const RepeatHandler = {
 	},
 };
 
-module.exports = RepeatHandler;
+export default RepeatHandler; 
