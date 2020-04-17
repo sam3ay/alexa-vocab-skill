@@ -1,4 +1,4 @@
-import text from '../libs/text.mjs';
+import text from '../libs/handlerhelp.mjs';
 const welcomeMessage = text.welcomeMessage
 const helpMessage = text.helpMessage
 

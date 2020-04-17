@@ -1,4 +1,4 @@
-import text from '../libs/text.mjs';
+import text from '../libs/handlerhelp.mjs';
 const exitSkillMessage = text.exitSkillMessage
 
 const ExitHandler = {

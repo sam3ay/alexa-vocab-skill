@@ -1,6 +1,6 @@
 import ask from 'ask-sdk-test';
 import { handler as skillHandler } from '../lambda/index.mjs';
-import { generateResponse } from "./__mock__/nock-got.mjs"
+import { generateResponse } from "./__mock__/nock-got.mjs";
 
 // initialize the testing framework
 const skillSettings = {
@@ -19,28 +19,40 @@ describe('LaunchRequest', () => {
 			saysLike: 'Welcome',
 			repromptsNothing: false,
 			shouldEndSession: false,
-			ignoreQuestionCheck: true,
+			ignoreQuestionCheck: true
 		},
 	]);
 });
 
-generateResponse("bear", "def1", "def2", "def3")
+generateResponse("bear", "definition 1", "definition 2", "definition 3");
 
 describe('AddWordIntent', () => {
+	// Test yes to more definitions
+	alexaTest.test([
+		{
+			request: new ask.IntentRequestBuilder(skillSettings, "AddWordIntent").withSlot("word", "bear").withSlotResolution('moredef', 'no', 'YesNo', '001').build(),
+			saysLike: 'more definitions',
+			shouldEndSession: true,
+			ignoreQuestionCheck: true,
+		}
+	]);
+	// Test no to more definitions
+	alexaTest.test([
+		{
+			request: new ask.IntentRequestBuilder(skillSettings, "AddWordIntent").withSlot("word", "bear").withSlotResolution('moredef', 'no', 'YesNo', '000').build(),
+			saysLike: 'okay',
+			shouldEndSession: true,
+			ignoreQuestionCheck: true,
+		}
+	]);
+	// Test elicit more definitions
 	alexaTest.test([
 		{
 			request: new ask.IntentRequestBuilder(skillSettings, "AddWordIntent").withSlot("word", "bear").build(),
-			saysLike: 'Part(of a person)',
-			repromptsLike: 'add',
+			saysLike: 'of a person)',
 			shouldEndSession: false,
 			ignoreQuestionCheck: true,
-			// elicitsSlot: "definitions",
+			elicitsSlot: 'moredef',
 		}
 	])
 })
-
-// describe('LaunchIntentHandler', () => {
-// 	it('should be able to handle requests', () => {
-// 		expect(LaunchRequestHandler.canHandle(launchEvent)).to.equal(true);
-// 	});
-// });

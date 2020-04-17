@@ -1,5 +1,8 @@
 import { lookUpWord } from '../libs/word-search.mjs'
-import text from '../libs/text.mjs';
+import text from '../libs/handlerhelp.mjs';
+import _ from 'lodash';
+// import DynamoDbPersistenceAdapter from "ask-sdk-dynamodb-persistence-adapter"
+
 const helpMessage = text.helpMessage
 const addMessage = text.addMessage
 
@@ -17,71 +20,56 @@ const AddWordHandler = {
 	async handle(handlerInput) {
 		console.log("Inside AddWordHandler - handle");
 		//GRABBING ALL SLOT VALUES AND RETURNING THE MATCHING DATA OBJECT.
-		const word = handlerInput.requestEnvelope.request.intent.slots.word.value;
+		const slot = handlerInput.requestEnvelope.request.intent.slots;
+		const word = _.get(slot, 'word.value');
+		const more = _.get(slot, 'moredef.resolutions.resolutionsPerAuthority[0].values[0].value.id');
 		const response = handlerInput.responseBuilder;
 		const attributes = handlerInput.attributesManager.getSessionAttributes();
 
-		// new word fetch definition
-		if (word != attributes.word) {
-			attributes.definitionlist = await lookUpWord(word);
-			attributes.first = 0
-			attributes.last = 4
-			attributes.word = word
-		} else if (attributes.first >= attributes.definitionlist.length) {
-			return response.speak("Too long")
-				.reprompt("You know")
+		// fetch definitions
+		attributes.definitionlist = await lookUpWord(word);
+		let [speechOutput, speechOutMore] = fillSpeech(attributes.definitionlist, word);
+		handlerInput.attributesManager.setSessionAttributes(attributes);
+		if (more === undefined) {
+			// console.log(`${word}, ${more}, ${speechOutput}`)
+			return response.speak(speechOutput)
+				.reprompt(`Would you like to hear more definitions for ${word}`)
+				.addElicitSlotDirective('moredef')
+				.getResponse();
+		} else if (more === '001') {
+			// console.log(`${word}, ${more}, ${speechOutMore}`)
+			return response.speak(speechOutMore)
+				.getResponse();
+		} else {
+			// console.log("okay")
+			return response.speak("okay")
 				.getResponse();
 		}
-		let [speechOutput, slotDirective] = fillSlotObjects(attributes.definitionlist, attributes.first, attributes.last)
-		attributes.first += 4
-		attributes.last += 4
-		handlerInput.attributesManager.setSessionAttributes(attributes)
-		return response.speak(speechOutput)
-			.reprompt(addMessage)
-			.getResponse();
-		// add slot values and request the slot
-		// .addDirective(slotDirective)
-		//.addElicitSlotDirective('definition')
 	}
 };
 
 /***
  * TODO Template for interceptor
  */
-const PersistenceSavingResponseInterceptor = {
-	process(handlerInput) {
-		return new Promise((resolve, reject) => {
-			handlerInput.attributesManager.savePersistentAttributes()
-				.then(() => {
-					resolve();
-				})
-				.catch((error) => {
-					reject(error);
-				});
-		});
-	}
-};
 
-// Add definitions 4 at a time to slot and check answer against them
-function fillSlotObjects(inputarray, first, last) {
-	let outString = ``;
-	let replaceEntityDirective = {
-		type: 'Dialog.UpdateDynamicEntities',
-		update: 'REPLACE',
-		types: []
+// const dynamoDbPersistenceAdapter = new DynamoDbPersistenceAdapter({ tableName: 'FooTable' })
+
+// Add definitions based on one per part of speech
+function fillSpeech(inputarray, word) {
+	let outString = `As a ${inputarray[0][0]}, ${word}, is ussually defined as: ${inputarray[0][1]}`;
+	let outMoreString = `I have ${(inputarray.length - 1)} more definitions for ${word}:`;
+	let partOfSpeech = ""
+	for (let i = 1; i < inputarray.length; i++) {
+		let part = inputarray[i][0];
+		let definition = inputarray[i][1];
+		if (part === partOfSpeech) {
+			outMoreString += `${i}. ${definition}.`;
+		} else {
+			partOfSpeech = part
+			outMoreString += ` As a ${part}, ${i}. ${definition}.`;
+		}
 	};
-	for (let i = first; i < last || i < inputarray.length; i++) {
-		let definition = inputarray[i][0] + inputarray[i][1];
-		let entity = {
-			id: `def${i}`,
-			name: {
-				value: definition,
-			}
-		};
-		outString += definition;
-		replaceEntityDirective.types.push(entity);
-	};
-	return [outString, replaceEntityDirective]
+	return [outString, outMoreString];
 }
 
 export default AddWordHandler;

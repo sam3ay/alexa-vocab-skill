@@ -8,8 +8,10 @@ import got from "got";
 	*/
 async function lookUpWord(word) {
 	try {
-		let app_id = "app_id";	// get this from the oxford dictionary api webpage
-		let app_key = "app_key"; // get this from the oxford dictionary api webpage
+		// let app_id = process.env.OXFORD_API;	// get this from the oxford dictionary api webpage
+		// let app_key = process.env.OXFORD_KEY; // get this from the oxford dictionary api webpage
+		let app_key = 'app_key';
+		let app_id = 'app_id';
 		// determines fields returned strict maching prevents homographs
 		const path = "fields=definitions&strictmatch=true";
 		// accepts json provides credentials

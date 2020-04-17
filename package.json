@@ -12,7 +12,8 @@
   "dependencies": {
     "ask-sdk": "^2.8.0",
     "ask-sdk-model": "^1.28.0",
-    "got": "^10.7.0"
+    "got": "^10.7.0",
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "ask-sdk-test": "^2.3.0",

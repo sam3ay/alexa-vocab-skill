@@ -68,12 +68,12 @@
               ]
             },
             {
-              "name": "definitions",
-              "type": "AnyDefinition"
+              "name": "moredef",
+              "type": "YesNo"
             }
           ],
           "samples": [
-            "I choose the {definitions}",
+            "I choose the {moredef}",
             "Add {word}  to the vocab list",
             "Add {word}"
           ]
@@ -123,6 +123,40 @@
               }
             }
           ]
+        },
+        {
+          "name": "YesNo",
+          "values": [
+            {
+              "id": "000",
+              "name": {
+                "value": "no",
+                "synonyms": [
+                  "nah",
+                  "no thank you",
+                  "I do not",
+                  "nope"
+                ]
+              }
+            },
+            {
+              "id": "001",
+              "name": {
+                "value": "yes",
+                "synonyms": [
+                  "more",
+                  "You know it",
+                  "yes please",
+                  "I do",
+                  "yeah",
+                  "yep",
+                  "i suppose",
+                  "of course",
+                  "obviously"
+                ]
+              }
+            }
+          ]
         }
       ]
     },
@@ -130,8 +164,10 @@
       "intents": [
         {
           "name": "AddWordIntent",
-          "confirmationRequired": false,
-          "prompts": {},
+          "confirmationRequired": true,
+          "prompts": {
+            "confirmation": "Confirm.Intent.1012607185128"
+          },
           "slots": [
             {
               "name": "word",
@@ -143,8 +179,8 @@
               }
             },
             {
-              "name": "definitions",
-              "type": "AnyDefinition",
+              "name": "moredef",
+              "type": "YesNo",
               "confirmationRequired": false,
               "elicitationRequired": false,
               "prompts": {}
@@ -165,6 +201,15 @@
           {
             "type": "PlainText",
             "value": "What can I add for you?"
+          }
+        ]
+      },
+      {
+        "id": "Confirm.Intent.1012607185128",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Do you want to add {word} to your Vocabulary list?"
           }
         ]
       }
