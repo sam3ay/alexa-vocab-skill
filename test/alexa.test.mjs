@@ -12,7 +12,7 @@ const skillSettings = {
 	userId: 'amzn1.ask.account.VOID',
 	deviceId: 'amzn1.ask.device.VOID',
 	locale: 'en-US',
-	debug: 'boolean',
+	// debug: true,
 };
 
 
