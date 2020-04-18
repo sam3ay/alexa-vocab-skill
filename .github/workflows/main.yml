@@ -25,4 +25,3 @@ jobs:
           function_name: VocabSkills
           source: lambda/
           publish: false
-          dry_run: true
