@@ -8,9 +8,9 @@ var expect = chai.expect
 // Component Test, Looking up a word in a dictionary
 describe('Word Lookup', () => {
 	it("Given an invalid word, return an error(404) message", async () => {
-		replyError()
-		let searchWord = await lookUpWord("notaword")
-		expect(searchWord).to.equal("404")
+		replyError();
+		let searchWord = await lookUpWord("notaword");
+		expect(searchWord).to.equal("404");
 	});
 	// Testing definition retrieval
 	it("Given a valid word, retrieve list of nested lists with definitions and part of speech", () => {
@@ -47,7 +47,7 @@ describe('Word Lookup', () => {
 					['Noun',
 						'something that is very difficult or unpleasant to deal with'],
 					['Noun',
-						'a person who sells shares hoping to buy them back later at a lower price.']]
+						'a person who sells shares hoping to buy them back later at a lower price.']];
 					let respond = retrieveDefinition(test_results);
 					chai.assert.deepEqual(respond, word_lookup_ans, "Definition parser error");
 				}

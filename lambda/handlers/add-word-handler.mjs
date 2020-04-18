@@ -1,7 +1,6 @@
 import { lookUpWord } from '../libs/word-search.mjs'
 import text from '../libs/handlerhelp.mjs';
 import _ from 'lodash';
-// import DynamoDbPersistenceAdapter from "ask-sdk-dynamodb-persistence-adapter"
 
 const helpMessage = text.helpMessage
 const addMessage = text.addMessage
@@ -23,22 +22,38 @@ const AddWordHandler = {
 		const slot = handlerInput.requestEnvelope.request.intent.slots;
 		const word = _.get(slot, 'word.value');
 		const more = _.get(slot, 'moredef.resolutions.resolutionsPerAuthority[0].values[0].value.id');
+		const confirm = handlerInput.requestEnvelope.request.intent.confirmationStatus
 		const response = handlerInput.responseBuilder;
-		const attributes = handlerInput.attributesManager.getSessionAttributes();
-
-		// fetch definitions
-		attributes.definitionlist = await lookUpWord(word);
-		let [speechOutput, speechOutMore] = fillSpeech(attributes.definitionlist, word);
-		handlerInput.attributesManager.setSessionAttributes(attributes);
+		const attributes = await handlerInput.attributesManager.getSessionAttributes();
+		// fetch definitions set session attributes
+		if (attributes[word] !== word) {
+			attributes.definitionlist = await lookUpWord(word);
+			let [speechMain, speechMore] = fillSpeech(attributes.definitionlist, word);
+			attributes.speechMain = speechMain;
+			attributes.speechMore = speechMore;
+			handlerInput.attributesManager.setSessionAttributes(attributes);
+		} else if (confirm == 'CONFIRMED') {
+			let vocabCard = { [word]: attributes.definitionlist }
+			handlerInput.attributesManager.setPersistentAttributes(vocabCard);
+			await handlerInput.attributesManager.savePersistentAttributes();
+			handlerInput.attributesManager.setSessionAttributes(attributes);
+			return response.speak(`${word} has been added to your vocabulary list.`)
+				.getResponse();
+		} else if (confirm == 'DENIED') {
+			attributes[word] = undefined
+			await handlerInput.attributesManager.setSessionAttributes(attributes);
+			return response.speak(`Okay then`)
+				.getResponse();
+		};
 		if (more === undefined) {
 			// console.log(`${word}, ${more}, ${speechOutput}`)
-			return response.speak(speechOutput)
+			return response.speak(attributes.speechMain)
 				.reprompt(`Would you like to hear more definitions for ${word}`)
 				.addElicitSlotDirective('moredef')
 				.getResponse();
 		} else if (more === '001') {
 			// console.log(`${word}, ${more}, ${speechOutMore}`)
-			return response.speak(speechOutMore)
+			return response.speak(attributes.speechMore)
 				.getResponse();
 		} else {
 			// console.log("okay")
