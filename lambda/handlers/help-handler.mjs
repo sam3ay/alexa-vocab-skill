@@ -1,4 +1,5 @@
-const Alexa = require('ask-sdk-core');
+import text from '../libs/handlerhelp.mjs';
+const helpMessage = text.helpMessage
 
 const HelpHandler = {
 	canHandle(handlerInput) {
@@ -16,4 +17,4 @@ const HelpHandler = {
 	},
 };
 
-module.exports = HelpHandler;
+export default HelpHandler;

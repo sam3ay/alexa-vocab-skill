@@ -1,0 +1,4 @@
+{
+    "handler": "./lambda/index.mjs",
+    "locales": "en-US"
+}
