@@ -1,14 +1,14 @@
 {
-  "name": "basic",
+  "name": "vocab_skill",
   "version": "1.0.0",
-  "description": "",
-  "main": "./lambda/index.js",
+  "description": "Alexa skill to create Vocab cards",
+  "main": "./index.js",
   "type": "module",
   "scripts": {
     "test": "mocha"
   },
   "author": "sam3ay",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "ask-sdk": "^2.8.0",
     "got": "^10.7.0",

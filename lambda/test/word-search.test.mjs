@@ -1,6 +1,6 @@
 import fc from "fast-check";
 import chai from 'chai';
-import { retrieveDefinition, lookUpWord } from "../lambda/libs/word-search.mjs";
+import { retrieveDefinition, lookUpWord } from "../libs/word-search.mjs";
 import { generateResponse, replyError } from "./__mock__/nock-got.mjs"
 
 var expect = chai.expect

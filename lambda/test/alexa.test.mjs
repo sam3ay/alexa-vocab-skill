@@ -1,6 +1,6 @@
 import ask from 'ask-sdk-test';
 import AWS from 'aws-sdk-mock';
-import { handler as skillHandler } from '../lambda/index.js';
+import { handler as skillHandler } from '../index.js';
 import { generateResponse } from "./__mock__/nock-got.mjs";
 
 AWS.mock('DynamoDB', 'putItem', function (params, callback) {
