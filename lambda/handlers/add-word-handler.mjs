@@ -23,23 +23,27 @@ const AddWordHandler = {
 		const word = _.get(slot, 'word.value');
 		const more = _.get(slot, 'moredef.resolutions.resolutionsPerAuthority[0].values[0].value.id');
 		const confirm = handlerInput.requestEnvelope.request.intent.confirmationStatus
+		console.log(confirm)
 		const response = handlerInput.responseBuilder;
 		const attributes = await handlerInput.attributesManager.getSessionAttributes();
 		// fetch definitions set session attributes
-		if (attributes[word] !== word) {
+		if (attributes.word !== word) {
+			attributes.word = word
 			attributes.definitionlist = await lookUpWord(word);
 			let [speechMain, speechMore] = fillSpeech(attributes.definitionlist, word);
 			attributes.speechMain = speechMain;
 			attributes.speechMore = speechMore;
 			handlerInput.attributesManager.setSessionAttributes(attributes);
-		} else if (confirm == 'CONFIRMED') {
+		} else if (confirm === 'CONFIRMED') {
+			console.log('Inside confirmed')
 			let vocabCard = { [word]: attributes.definitionlist }
-			handlerInput.attributesManager.setPersistentAttributes(vocabCard);
+			await handlerInput.attributesManager.setPersistentAttributes(vocabCard);
 			await handlerInput.attributesManager.savePersistentAttributes();
+			console.log(attributes)
 			handlerInput.attributesManager.setSessionAttributes(attributes);
 			return response.speak(`${word} has been added to your vocabulary list.`)
 				.getResponse();
-		} else if (confirm == 'DENIED') {
+		} else if (confirm === 'DENIED') {
 			attributes[word] = undefined
 			await handlerInput.attributesManager.setSessionAttributes(attributes);
 			return response.speak(`Okay then`)
@@ -56,8 +60,8 @@ const AddWordHandler = {
 			return response.speak(attributes.speechMore)
 				.getResponse();
 		} else {
-			// console.log("okay")
-			return response.speak("okay")
+			console.log(handlerInput)
+			return response.speak(helpMessage)
 				.getResponse();
 		}
 	}
@@ -71,7 +75,7 @@ const AddWordHandler = {
 
 // Add definitions based on one per part of speech
 function fillSpeech(inputarray, word) {
-	let outString = `As a ${inputarray[0][0]}, ${word}, is ussually defined as: ${inputarray[0][1]}`;
+	let outString = `As a ${inputarray[0][0]}, ${word}, is usually defined as: ${inputarray[0][1]}`;
 	let outMoreString = `I have ${(inputarray.length - 1)} more definitions for ${word}:`;
 	let partOfSpeech = ""
 	for (let i = 1; i < inputarray.length; i++) {

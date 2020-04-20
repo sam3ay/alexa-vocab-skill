@@ -24,7 +24,7 @@ const skillBuilder = Alexa.SkillBuilders.custom();
 const handler = skillBuilder
   .withPersistenceAdapter(new Alexa.DynamoDbPersistenceAdapter({
     tableName: 'vocab-skill',
-    createTable: true,
+    // createTable: true,
     attributesName: 'Vocab_List'
   }))
   .addRequestHandlers(
@@ -38,4 +38,4 @@ const handler = skillBuilder
   .addErrorHandlers(ErrorHandler)
   .lambda();
 
-export default handler;
+export { handler };

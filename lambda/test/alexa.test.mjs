@@ -1,11 +1,11 @@
 import ask from 'ask-sdk-test';
 import AWS from 'aws-sdk-mock';
-import { handler as skillHandler } from '../index.js';
+import { handler as skillHandler } from '../index.mjs';
 import { generateResponse } from "./__mock__/nock-got.mjs";
 
-AWS.mock('DynamoDB', 'putItem', function (params, callback) {
-	callback(null, "successfully put item in database");
-});
+// AWS.mock('DynamoDB', 'putItem', function (params, callback) {
+// 	callback(null, "successfully put item in database");
+// });
 // initialize the testing framework
 const skillSettings = {
 	appId: 'amzn1.ask.skill.00000000-0000-0000-0000-000000000000',
