@@ -1,4 +1,3 @@
-
 import LaunchRequestHandler from './launch-handler.mjs';
 import AddWordHandler from './add-word-handler.mjs';
 import SessionEndedRequestHandler from './sessionended-handler.mjs'
