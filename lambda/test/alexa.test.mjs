@@ -1,8 +1,8 @@
 import ask from 'ask-sdk-test';
-import AWS from 'aws-sdk-mock';
 import { handler as skillHandler } from '../index.mjs';
 import { generateResponse } from "./__mock__/nock-got.mjs";
 
+// import AWS from 'aws-sdk-mock';
 // AWS.mock('DynamoDB', 'putItem', function (params, callback) {
 // 	callback(null, "successfully put item in database");
 // });
@@ -12,7 +12,7 @@ const skillSettings = {
 	userId: 'amzn1.ask.account.VOID',
 	deviceId: 'amzn1.ask.device.VOID',
 	locale: 'en-US',
-	// debug: true,
+	debug: true,
 };
 
 
@@ -22,10 +22,10 @@ describe('LaunchRequest', () => {
 	alexaTest.test([
 		{
 			request: new ask.LaunchRequestBuilder(skillSettings).build(),
-			saysLike: 'Welcome',
+			saysLike: 'Welcome to',
 			repromptsNothing: false,
 			shouldEndSession: false,
-			ignoreQuestionCheck: true
+			ignoreQuestionCheck: true,
 		},
 	]);
 });
@@ -46,7 +46,7 @@ describe('AddWordIntent', () => {
 	alexaTest.test([
 		{
 			request: new ask.IntentRequestBuilder(skillSettings, "AddWordIntent").withSlot("word", "bear").withSlotResolution('moredef', 'no', 'YesNo', '000').build(),
-			saysLike: 'okay',
+			saysLike: 'can',
 			shouldEndSession: true,
 			ignoreQuestionCheck: true,
 		}
@@ -77,3 +77,30 @@ describe('AddWordIntent', () => {
 	// 	}
 	// ]);
 })
+
+describe('CancelIntent, StopIntent, PauseIntent', () => {
+	alexaTest.test([
+		{
+			request: new ask.IntentRequestBuilder(skillSettings, 'AMAZON.CancelIntent').build(),
+			saysLike: 'time',
+			repromptsNothing: true,
+			shouldEndSession: true,
+		},
+	]);
+	alexaTest.test([
+		{
+			request: new ask.IntentRequestBuilder(skillSettings, 'AMAZON.StopIntent').build(),
+			saysLike: 'time',
+			repromptsNothing: true,
+			shouldEndSession: true,
+		},
+	]);
+	alexaTest.test([
+		{
+			request: new ask.IntentRequestBuilder(skillSettings, 'AMAZON.PauseIntent').build(),
+			saysLike: 'time',
+			repromptsNothing: true,
+			shouldEndSession: true,
+		},
+	]);
+});
