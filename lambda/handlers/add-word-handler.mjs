@@ -1,5 +1,6 @@
-import { lookUpWord } from '../libs/word-search.mjs'
-import text from '../libs/handlerhelp.mjs';
+import { lookUpWord } from '../libs/word-search.mjs';
+import { addUnknownFlashcard } from '../libs/flashcard-helper.mjs';
+import text, { fillSpeech } from '../libs/handlerhelp.mjs';
 import _ from 'lodash';
 
 const helpMessage = text.helpMessage
@@ -11,7 +12,6 @@ const addMessage = text.addMessage
 const AddWordHandler = {
 	canHandle(handlerInput) {
 		console.log("Inside AddWordHandler");
-		const attributes = handlerInput.attributesManager.getSessionAttributes();
 		const request = handlerInput.requestEnvelope.request;
 		return request.type === 'IntentRequest' &&
 			request.intent.name === 'AddWordIntent';
@@ -33,14 +33,13 @@ const AddWordHandler = {
 			attributes.speechMain = speechMain;
 			attributes.speechMore = speechMore;
 			handlerInput.attributesManager.setSessionAttributes(attributes);
-		} else if (confirm === 'CONFIRMED') {
-			console.log('Inside confirmed')
-			let vocabCard = { [word]: attributes.definitionlist }
-			await handlerInput.attributesManager.setPersistentAttributes(vocabCard);
-			await handlerInput.attributesManager.savePersistentAttributes();
+		}
+		if (confirm === 'CONFIRMED') {
+			console.log('Okay now what')
+			await addUnknownFlashcard(handlerInput.attributesManager);
 			attributes.word = undefined;
 			attributes.lastSpeech = `${word} has been added to your vocabulary list.`;
-			handlerInput.attributesManager.setSessionAttributes(attributes);
+			await handlerInput.attributesManager.setSessionAttributes(attributes);
 			return response.speak(attributes.lastSpeech)
 				.getResponse();
 		} else if (confirm === 'DENIED') {
@@ -53,7 +52,7 @@ const AddWordHandler = {
 		if (more === undefined) {
 			// console.log(`${word}, ${more}, ${speechOutput}`)
 			attributes.lastSpeech = attributes.speechMain;
-			handlerInput.attributesManager.setSessionAttributes(attributes);
+			await handlerInput.attributesManager.setSessionAttributes(attributes);
 			return response.speak(attributes.speechMain)
 				.reprompt(`Would you like to hear more definitions for ${word}`)
 				.addElicitSlotDirective('moredef')
@@ -61,12 +60,12 @@ const AddWordHandler = {
 		} else if (more === '001') {
 			// console.log(`${word}, ${more}, ${speechOutMore}`)
 			attributes.lastSpeech = attributes.speechMore;
-			handlerInput.attributesManager.setSessionAttributes(attributes);
+			await handlerInput.attributesManager.setSessionAttributes(attributes);
 			return response.speak(attributes.speechMore)
 				.getResponse();
 		} else {
 			attributes.lastSpeech = helpMessage;
-			handlerInput.attributesManager.setSessionAttributes(attributes);
+			await handlerInput.attributesManager.setSessionAttributes(attributes);
 			return response.speak(helpMessage)
 				.getResponse();
 		}
@@ -74,21 +73,5 @@ const AddWordHandler = {
 };
 
 // Add definitions based on one per part of speech
-function fillSpeech(inputarray, word) {
-	let outString = `As a ${inputarray[0][0]}, ${word}, is usually defined as: ${inputarray[0][1]}`;
-	let outMoreString = `I have ${(inputarray.length - 1)} more definitions for ${word}:`;
-	let partOfSpeech = ""
-	for (let i = 1; i < inputarray.length; i++) {
-		let part = inputarray[i][0];
-		let definition = inputarray[i][1];
-		if (part === partOfSpeech) {
-			outMoreString += ` ${i}. ${definition}.`;
-		} else {
-			partOfSpeech = part
-			outMoreString += ` As a ${part}, ${i}. ${definition}.`;
-		}
-	};
-	return [outString, outMoreString];
-}
 
 export default AddWordHandler;

@@ -1,4 +1,5 @@
 import ask from 'ask-sdk-test';
+import _ from 'lodash';
 import { handler as skillHandler } from '../index.mjs';
 import { generateResponse } from "./__mock__/nock-got.mjs";
 
@@ -31,6 +32,9 @@ describe('LaunchRequest', () => {
 });
 
 generateResponse("bear", "definition 1", "definition 2", "definition 3");
+const confirmIntent = new ask.IntentRequestBuilder(skillSettings, "AddWordIntent").withSlot("word", "bear").withSlotResolution('moredef', 'no', 'YesNo', '000').build();
+_.set(confirmIntent, 'request.intent.confirmationStatus', 'CONFIRMED');
+console.log(confirmIntent)
 
 describe('AddWordIntent', () => {
 	// Test yes to more definitions
@@ -61,21 +65,19 @@ describe('AddWordIntent', () => {
 			elicitsSlot: 'moredef',
 		}
 	]);
-	// Intent Confirmation TODO add confirmation status
-	// alexaTest.test([
-	// 	{
-	// 		request: new ask.IntentRequestBuilder(skillSettings, "AddWordIntent").withSlot("word", "bear").withSlotResolution('moredef', 'no', 'YesNo', '000').build(),
-	// 		intent: { 'confirmationStatus': 'CONFIRMED' },
-	// 		saysLike: 'okay',
-	// 		shouldEndSession: true,
-	// 		ignoreQuestionCheck: true,
-	// 		storesAttributes: {
-	// 			bear: (value) => {
-	// 				return Array.isArray(value)
-	// 			},
-	// 		}
-	// 	}
-	// ]);
+	alexaTest.test([
+		{
+			request: confirmIntent,
+			saysLike: 'has been added',
+			shouldEndSession: true,
+			storesAttributes: {
+				words: (value) => {
+					return _.has(value, 'unknownWords.bear')
+				}
+			}
+
+		}
+	]);
 })
 
 describe('CancelIntent, StopIntent, PauseIntent', () => {
@@ -99,6 +101,30 @@ describe('CancelIntent, StopIntent, PauseIntent', () => {
 		{
 			request: new ask.IntentRequestBuilder(skillSettings, 'AMAZON.PauseIntent').build(),
 			saysLike: 'time',
+			repromptsNothing: true,
+			shouldEndSession: true,
+		},
+	]);
+});
+
+describe('HelpIntent', () => {
+	alexaTest.test([
+		{
+			request: new ask.IntentRequestBuilder(skillSettings, 'AMAZON.HelpHandler').build(),
+			saysLike: ' or',
+			repromptsLike: ' or',
+			shouldEndSession: false,
+			ignoreQuestionCheck: true,
+		},
+	]);
+});
+
+
+describe('SessionEndIntent', () => {
+	alexaTest.test([
+		{
+			request: new ask.SessionEndedRequestBuilder(skillSettings, 'SessionEndedRequest').build(),
+			saysNothing: true,
 			repromptsNothing: true,
 			shouldEndSession: true,
 		},
