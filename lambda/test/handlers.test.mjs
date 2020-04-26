@@ -40,9 +40,8 @@ describe('AddWordIntent', () => {
 	// Test yes to more definitions
 	alexaTest.test([
 		{
-			request: new ask.IntentRequestBuilder(skillSettings, "AddWordIntent").withSlot("word", "bear").withSlotResolution('moredef', 'no', 'YesNo', '001').build(),
+			request: new ask.IntentRequestBuilder(skillSettings, "AddWordIntent").withSlot("word", "bear").withSlotResolution('moredef', 'yes', 'YesNo', '001').build(),
 			saysLike: 'more definitions',
-			shouldEndSession: true,
 			ignoreQuestionCheck: true,
 		}
 	]);
@@ -50,9 +49,7 @@ describe('AddWordIntent', () => {
 	alexaTest.test([
 		{
 			request: new ask.IntentRequestBuilder(skillSettings, "AddWordIntent").withSlot("word", "bear").withSlotResolution('moredef', 'no', 'YesNo', '000').build(),
-			saysLike: 'can',
-			shouldEndSession: true,
-			ignoreQuestionCheck: true,
+			saysLike: 'Okay',
 		}
 	]);
 	// Test elicit more definitions
@@ -61,10 +58,11 @@ describe('AddWordIntent', () => {
 			request: new ask.IntentRequestBuilder(skillSettings, "AddWordIntent").withSlot("word", "bear").build(),
 			saysLike: 'of a person)',
 			shouldEndSession: false,
-			ignoreQuestionCheck: true,
 			elicitsSlot: 'moredef',
+			ignoreQuestionCheck: true,
 		}
 	]);
+	// Test confirm word added to table
 	alexaTest.test([
 		{
 			request: confirmIntent,

@@ -1,7 +1,7 @@
 const text = {
-	addMessage: "add",
+	addMessage: "Would you like to add",
 	exitSkillMessage: "Ok, till next time.",
-	helpMessage: "You can add a word or take a quiz.",
+	helpMessage: "Would you like to add a word or start a review?",
 	newWelcomeMessage: "Welcome to Vocab list.",
 	NoRepeat: "Sorry, what would you like to do?",
 	NoWord: "Sorry,",

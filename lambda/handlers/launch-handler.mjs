@@ -10,7 +10,6 @@ const LaunchRequestHandler = {
 	},
 	async handle(handlerInput) {
 		const attributes = await handlerInput.attributesManager.getPersistentAttributes();
-		console.log(attributes)
 		if (_.isEmpty(attributes)) {
 			return handlerInput.responseBuilder
 				.speak(newWelcomeMessage)

@@ -8,9 +8,14 @@ import _ from 'lodash';
 async function addUnknownFlashcard(attributesManager) {
 	let flashcards = await attributesManager.getPersistentAttributes();
 	let attributes = await attributesManager.getSessionAttributes();
-	_.set(flashcards, `words.unknownWords.${attributes.word}`, attributes.definitionlist);
-	await attributesManager.setPersistentAttributes(flashcards);
-	await attributesManager.savePersistentAttributes();
+	if (_.has(flashcards, `word.unknownWords.${attributes.word}`) || _.has(flashcards, `word.knownWords.${attributes.word}`)) {
+		return false
+	} else {
+		_.set(flashcards, `words.unknownWords.${attributes.word}`, attributes.definitionlist);
+		await attributesManager.setPersistentAttributes(flashcards);
+		await attributesManager.savePersistentAttributes();
+		return true
+	}
 }
 
 export {

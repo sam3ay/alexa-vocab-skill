@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "vocab skill",
+      "invocationName": "vocab list",
       "intents": [
         {
           "name": "AMAZON.CancelIntent",
@@ -69,11 +69,14 @@
             },
             {
               "name": "moredef",
-              "type": "YesNo"
+              "type": "YesNo",
+              "samples": [
+                "{moredef}",
+                "I'd like to hear {moredef}"
+              ]
             }
           ],
           "samples": [
-            "I choose the {moredef}",
             "Add {word}  to the vocab list",
             "Add {word}"
           ]
@@ -182,8 +185,10 @@
               "name": "moredef",
               "type": "YesNo",
               "confirmationRequired": false,
-              "elicitationRequired": false,
-              "prompts": {}
+              "elicitationRequired": true,
+              "prompts": {
+                "elicitation": "Elicit.Slot.158867913558.659865189134"
+              }
             }
           ]
         }
@@ -210,6 +215,15 @@
           {
             "type": "PlainText",
             "value": "Do you want to add {word} to your Vocabulary list?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.158867913558.659865189134",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Would you like to hear more definitions for {word} ."
           }
         ]
       }

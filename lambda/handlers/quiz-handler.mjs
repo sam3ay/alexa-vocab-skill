@@ -4,19 +4,18 @@ const noRepeat = text.noRepeat;
 
 const QuizHandler = {
 	canHandle(handlerInput) {
-		console.log("Inside RepeatHandler");
-		const attributes = handlerInput.attributesManager.getSessionAttributes();
+		console.log("Inside QuizIntent");
 		const request = handlerInput.requestEnvelope.request;
 
 		return request.type === 'IntentRequest' &&
 			request.intent.name === 'QuizIntent';
 	},
 	async handle(handlerInput) {
-		console.log("Inside RepeatHandler - handle");
+		console.log("Inside QuizIntent- handle");
 		db_attributes = await handlerInput.attributesManager.getPersistentAttributes();
 		// Go through keys and retrieve 10 words
-		wordList = getQuestion(db_attributes)
-		const lastSpeech = _.get(attributes, 'lastSpeech');
+		let wordList = getQuestion(db_attributes)
+		let lastSpeech = _.get(attributes, 'lastSpeech');
 		return handlerInput.responseBuilder
 			.speak(noRepeat)
 			.reprompt(noRepeat)

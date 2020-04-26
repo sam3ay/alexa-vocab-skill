@@ -23,9 +23,7 @@ RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/data/.bash_h
 WORKDIR ${HOME}/app
 
 # install ask-cli and aws-cli
-RUN npm install -g ask-cli severless\
-    && npm install --only=dev jest \
-    && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
     && unzip awscliv2.zip \
     && ./aws/install \
     && rm -rf awscliv2.zip aws/

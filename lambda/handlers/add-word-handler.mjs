@@ -17,6 +17,7 @@ const AddWordHandler = {
 			request.intent.name === 'AddWordIntent';
 	},
 	async handle(handlerInput) {
+		// try {
 		console.log("Inside AddWordHandler - handle");
 		//GRABBING ALL SLOT VALUES AND RETURNING THE MATCHING DATA OBJECT.
 		const slot = handlerInput.requestEnvelope.request.intent.slots;
@@ -35,10 +36,13 @@ const AddWordHandler = {
 			handlerInput.attributesManager.setSessionAttributes(attributes);
 		}
 		if (confirm === 'CONFIRMED') {
-			console.log('Okay now what')
-			await addUnknownFlashcard(handlerInput.attributesManager);
+			let newWord = await addUnknownFlashcard(handlerInput.attributesManager);
+			if (newWord) {
+				attributes.lastSpeech = `${word} has been added to your vocabulary list.`;
+			} else {
+				attributes.lastSpeech = `${word} is already in your vocabulary list.`;
+			}
 			attributes.word = undefined;
-			attributes.lastSpeech = `${word} has been added to your vocabulary list.`;
 			await handlerInput.attributesManager.setSessionAttributes(attributes);
 			return response.speak(attributes.lastSpeech)
 				.getResponse();
@@ -54,14 +58,20 @@ const AddWordHandler = {
 			attributes.lastSpeech = attributes.speechMain;
 			await handlerInput.attributesManager.setSessionAttributes(attributes);
 			return response.speak(attributes.speechMain)
-				.reprompt(`Would you like to hear more definitions for ${word}`)
+				.reprompt(`Would you like to hear more definitions for ${word}?`)
 				.addElicitSlotDirective('moredef')
 				.getResponse();
 		} else if (more === '001') {
 			// console.log(`${word}, ${more}, ${speechOutMore}`)
-			attributes.lastSpeech = attributes.speechMore;
+			attributes.lastSpeech = `${attributes.speechMore} ${addMessage} ${word}?`;
 			await handlerInput.attributesManager.setSessionAttributes(attributes);
-			return response.speak(attributes.speechMore)
+			return response.speak(attributes.lastSpeech)
+				.getResponse();
+		} else if (more === '000') {
+			// console.log(`${word}, ${more}, ${speechOutMore}`)
+			attributes.lastSpeech = `Okay`;
+			await handlerInput.attributesManager.setSessionAttributes(attributes);
+			return response.speak(attributes.lastSpeech)
 				.getResponse();
 		} else {
 			attributes.lastSpeech = helpMessage;
@@ -69,6 +79,9 @@ const AddWordHandler = {
 			return response.speak(helpMessage)
 				.getResponse();
 		}
+		// } catch (e) {
+		// 	console.log(e)
+		// }
 	}
 };
 
