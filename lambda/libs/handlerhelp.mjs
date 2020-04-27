@@ -3,7 +3,7 @@ const text = {
 	exitSkillMessage: "Ok, till next time.",
 	helpMessage: "Would you like to add a word or start a review?",
 	newWelcomeMessage: "Welcome to Vocab list.",
-	NoRepeat: "Sorry, what would you like to do?",
+	noRepeat: "Sorry, Would you like to add a word or start a review?",
 	NoWord: "Sorry,",
 	wordExist: "",
 	welcomeMessage: "Welcome back to Vocab list"

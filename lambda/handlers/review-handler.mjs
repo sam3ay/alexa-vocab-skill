@@ -2,16 +2,16 @@ import text from '../libs/handlerhelp.mjs';
 import _ from 'lodash';
 const noRepeat = text.noRepeat;
 
-const QuizHandler = {
+const ReviewHandler = {
 	canHandle(handlerInput) {
-		console.log("Inside QuizIntent");
+		console.log("Inside ReviewIntent");
 		const request = handlerInput.requestEnvelope.request;
 
 		return request.type === 'IntentRequest' &&
-			request.intent.name === 'QuizIntent';
+			request.intent.name === 'ReviewIntent';
 	},
 	async handle(handlerInput) {
-		console.log("Inside QuizIntent- handle");
+		console.log("Inside ReviewIntent- handle");
 		db_attributes = await handlerInput.attributesManager.getPersistentAttributes();
 		// Go through keys and retrieve 10 words
 		let wordList = getQuestion(db_attributes)
@@ -23,4 +23,4 @@ const QuizHandler = {
 	},
 };
 
-export default QuizHandler; 
+export default ReviewHandler; 

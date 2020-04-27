@@ -18,6 +18,12 @@ async function addUnknownFlashcard(attributesManager) {
 	}
 }
 
+function randomUnknownFlashcard(keys) {
+	// << floor division sub
+	return keys[keys.length * Math.random() << 0];
+};
+
 export {
-	addUnknownFlashcard
+	addUnknownFlashcard,
+	randomUnknownFlashcard
 }

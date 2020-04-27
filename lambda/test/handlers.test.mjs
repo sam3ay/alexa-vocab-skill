@@ -34,75 +34,86 @@ describe('LaunchRequest', () => {
 generateResponse("bear", "definition 1", "definition 2", "definition 3");
 const confirmIntent = new ask.IntentRequestBuilder(skillSettings, "AddWordIntent").withSlot("word", "bear").withSlotResolution('moredef', 'no', 'YesNo', '000').build();
 _.set(confirmIntent, 'request.intent.confirmationStatus', 'CONFIRMED');
-console.log(confirmIntent)
 
 describe('AddWordIntent', () => {
-	// Test yes to more definitions
-	alexaTest.test([
-		{
-			request: new ask.IntentRequestBuilder(skillSettings, "AddWordIntent").withSlot("word", "bear").withSlotResolution('moredef', 'yes', 'YesNo', '001').build(),
-			saysLike: 'more definitions',
-			ignoreQuestionCheck: true,
-		}
-	]);
-	// Test no to more definitions
-	alexaTest.test([
-		{
-			request: new ask.IntentRequestBuilder(skillSettings, "AddWordIntent").withSlot("word", "bear").withSlotResolution('moredef', 'no', 'YesNo', '000').build(),
-			saysLike: 'Okay',
-		}
-	]);
-	// Test elicit more definitions
-	alexaTest.test([
-		{
-			request: new ask.IntentRequestBuilder(skillSettings, "AddWordIntent").withSlot("word", "bear").build(),
-			saysLike: 'of a person)',
-			shouldEndSession: false,
-			elicitsSlot: 'moredef',
-			ignoreQuestionCheck: true,
-		}
-	]);
-	// Test confirm word added to table
-	alexaTest.test([
-		{
-			request: confirmIntent,
-			saysLike: 'has been added',
-			shouldEndSession: true,
-			storesAttributes: {
-				words: (value) => {
-					return _.has(value, 'unknownWords.bear')
-				}
+	describe('Yes to more Definitions', () => {
+		alexaTest.test([
+			{
+				request: new ask.IntentRequestBuilder(skillSettings, "AddWordIntent").withSlot("word", "bear").withSlotResolution('moredef', 'yes', 'YesNo', '001').build(),
+				saysLike: 'more definitions',
+				ignoreQuestionCheck: true,
 			}
+		]);
+	});
+	// Test no to more definitions
+	describe('No to more definitions', () => {
+		alexaTest.test([
+			{
+				request: new ask.IntentRequestBuilder(skillSettings, "AddWordIntent").withSlot("word", "bear").withSlotResolution('moredef', 'no', 'YesNo', '000').build(),
+				saysLike: 'Okay',
+			}
+		]);
+	});
+	// Test elicit more definitions
+	describe('Elicit more definitions', () => {
+		alexaTest.test([
+			{
+				request: new ask.IntentRequestBuilder(skillSettings, "AddWordIntent").withSlot("word", "bear").build(),
+				saysLike: 'of a person)',
+				shouldEndSession: false,
+				elicitsSlot: 'moredef',
+				ignoreQuestionCheck: true,
+			}
+		]);
+	})
+	describe('Confirm word Added to table', () => {
+		alexaTest.test([
+			{
+				request: confirmIntent,
+				saysLike: 'has been added',
+				shouldEndSession: true,
+				storesAttributes: {
+					words: (value) => {
+						return _.has(value, 'unknownWords.bear')
+					}
+				}
 
-		}
-	]);
+			}
+		]);
+	})
 })
 
-describe('CancelIntent, StopIntent, PauseIntent', () => {
-	alexaTest.test([
-		{
-			request: new ask.IntentRequestBuilder(skillSettings, 'AMAZON.CancelIntent').build(),
-			saysLike: 'time',
-			repromptsNothing: true,
-			shouldEndSession: true,
-		},
-	]);
-	alexaTest.test([
-		{
-			request: new ask.IntentRequestBuilder(skillSettings, 'AMAZON.StopIntent').build(),
-			saysLike: 'time',
-			repromptsNothing: true,
-			shouldEndSession: true,
-		},
-	]);
-	alexaTest.test([
-		{
-			request: new ask.IntentRequestBuilder(skillSettings, 'AMAZON.PauseIntent').build(),
-			saysLike: 'time',
-			repromptsNothing: true,
-			shouldEndSession: true,
-		},
-	]);
+describe('ExitHandler', () => {
+	describe('CancelIntent', () => {
+		alexaTest.test([
+			{
+				request: new ask.IntentRequestBuilder(skillSettings, 'AMAZON.CancelIntent').build(),
+				saysLike: 'time',
+				repromptsNothing: true,
+				shouldEndSession: true,
+			},
+		]);
+	});
+	describe('StopIntent', () => {
+		alexaTest.test([
+			{
+				request: new ask.IntentRequestBuilder(skillSettings, 'AMAZON.StopIntent').build(),
+				saysLike: 'time',
+				repromptsNothing: true,
+				shouldEndSession: true,
+			},
+		]);
+	});
+	describe('PauseIntent', () => {
+		alexaTest.test([
+			{
+				request: new ask.IntentRequestBuilder(skillSettings, 'AMAZON.PauseIntent').build(),
+				saysLike: 'time',
+				repromptsNothing: true,
+				shouldEndSession: true,
+			},
+		]);
+	});
 });
 
 describe('HelpIntent', () => {
@@ -128,3 +139,24 @@ describe('SessionEndIntent', () => {
 		},
 	]);
 });
+
+describe('RepeatIntent', () => {
+	describe('Nothing to Repeat', () => {
+		alexaTest.test([
+			{
+				request: new ask.IntentRequestBuilder(skillSettings, 'AMAZON.RepeatHandler').build(),
+				saysLike: 'Sorry',
+			}
+		]);
+	})
+	describe('Something to repeat', () => {
+		alexaTest.test([
+			{
+				request: new ask.IntentRequestBuilder(skillSettings, 'AMAZON.RepeatHandler').build(),
+				saysLike: 'Heya',
+				withSessionAttributes: { 'lastSpeech': 'Heya' },
+				ignoreQuestionCheck: true,
+			}
+		])
+	})
+})
