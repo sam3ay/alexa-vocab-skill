@@ -1,31 +1,126 @@
 import fc from "fast-check";
 import chai from 'chai';
-import { randomUnknownFlashcard } from '../libs/flashcard-helper.mjs'
+import sinon from 'sinon';
+import _ from 'lodash';
+import { addUnknownFlashcard, randomUnknownWord } from '../libs/flashcard-helper.mjs'
 
 var expect = chai.expect
 
-describe("Given a list", () => {
+
+describe("Given an deck based object", () => {
+	it("determine if a value is a member of unknown words", () => {
+		fc.assert(
+			fc.asyncProperty(
+				fc.lorem(10, false), fc.lorem(15, false), fc.lorem(30, false),
+				fc.lorem(10, true), fc.lorem(15, true), fc.lorem(30, true),
+				async (word1, word2, word3, def1, def2, def3) => {
+					let sessionObj = {
+						words: {
+							unknownWords: {
+								[word1]: def1, [word2]: def2, [word3]: def3
+							}
+						}
+					}
+					let attrWord = { word: word1 }
+					let attributeManager = {
+						setSessionAttributes: async () => { return await true },
+						setPersistentAttributes: async () => { return await true },
+						savePersistentAttributes: async () => { return await true },
+						getSessionAttributes: async () => {
+							return await attrWord;
+						},
+						getPersistentAttributes: async () => {
+							return await sessionObj;
+						},
+					};
+					expect(await addUnknownFlashcard(attributeManager)).to.be.false;
+				}),
+			{
+				verbose: false,
+				numRuns: 20
+			}
+		)
+	});
+	it("determine if a value is a member of known words", () => {
+		fc.assert(
+			fc.asyncProperty(
+				fc.lorem(10, false), fc.lorem(15, false), fc.lorem(30, false),
+				fc.lorem(10, true), fc.lorem(15, true), fc.lorem(30, true),
+				async (word1, word2, word3, def1, def2, def3) => {
+					let sessionObj = {
+						words: {
+							knownWords: {
+								[word1]: def1, [word2]: def2, [word3]: def3
+							}
+						}
+					};
+					let attrWord = { word: word1 }
+					let attributeManager = {
+						setSessionAttributes: async () => { return await true },
+						setPersistentAttributes: async () => { return await true },
+						savePersistentAttributes: async () => { return await true },
+						getSessionAttributes: async () => {
+							return await attrWord;
+						},
+						getPersistentAttributes: async () => {
+							return await sessionObj;
+						},
+					};
+					expect(await addUnknownFlashcard(attributeManager)).to.be.false;
+				}),
+			{
+				verbose: false,
+				numRuns: 20
+			}
+		)
+	});
+	it("adds a word to unknown words", () => {
+		fc.assert(
+			fc.asyncProperty(
+				fc.lorem(10, false), fc.lorem(15, false), fc.lorem(30, false),
+				fc.lorem(10, true), fc.lorem(15, true), fc.lorem(30, true),
+				async (word1, word2, word3, def1, def2, def3) => {
+					let sessionObj = {
+						words: {
+							unknownWords: {
+								[word1]: def1, [word3]: def3
+							}
+						}
+					};
+					let attrWord = { word: word2, definitionList: def2 }
+					let attributeManager = {
+						setSessionAttributes: async () => { return await true },
+						setPersistentAttributes: async () => { return await true },
+						savePersistentAttributes: async () => { return await true },
+						getSessionAttributes: async () => {
+							return await attrWord;
+						},
+						getPersistentAttributes: async () => {
+							return await sessionObj;
+						},
+					};
+					let attrPost = await addUnknownFlashcard(attributeManager)
+					expect(attrPost).to.be.true
+					expect(sessionObj).to.have.deep.nested.property(`words.unknownWords.${word2}`, def2);
+				}),
+			{
+				verbose: false,
+				numRuns: 20
+			}
+		)
+	});
+});
+
+describe('Given an array', () => {
 	it("randomly retrieve elements from the list", () => {
 		fc.assert(
 			fc.property(
 				fc.lorem(10), fc.lorem(15), fc.lorem(30),
 				(property1, property2, property3) => {
 					let randArray = [property1, property2, property3];
-					expect(randomUnknownFlashcard(randArray)).to.be.oneOf(randArray);
+					expect(randomUnknownWord(randArray)).to.be.oneOf(randArray);
 				}
 			)
 		)
 	});
-	it("determine if a value is a member", () => {
-		fc.assert(
-			fc.property(
-				fc.lorem(10), fc.lorem(15), fc.lorem(30),
-				fc.lorem(10), fc.lorem(15), fc.lorem(30),
-				(word1, word2, word3, word4, word5, word6) => {
-					let randArray = [word1, word2, word3, word4, word5, word6]
-					expect(addWord(word1)).to.be.false;
-				}
-			)
-		)
-	})
 });

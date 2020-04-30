@@ -1,7 +1,8 @@
+import _ from 'lodash';
+import Alexa from 'ask-sdk';
 import { lookUpWord } from '../libs/word-search.mjs';
 import { addUnknownFlashcard } from '../libs/flashcard-helper.mjs';
 import text, { fillSpeech } from '../libs/handlerhelp.mjs';
-import _ from 'lodash';
 
 const helpMessage = text.helpMessage
 const addMessage = text.addMessage
@@ -12,16 +13,16 @@ const addMessage = text.addMessage
 const AddWordHandler = {
 	canHandle(handlerInput) {
 		console.log("Inside AddWordHandler");
-		const request = handlerInput.requestEnvelope.request;
-		return request.type === 'IntentRequest' &&
-			request.intent.name === 'AddWordIntent';
+		const requestEnv = handlerInput.requestEnvelope;
+		return Alexa.getRequestType(requestEnv) === 'IntentRequest' &&
+			Alexa.getIntentName(requestEnv) === 'AddWordIntent';
 	},
 	async handle(handlerInput) {
-		// try {
 		console.log("Inside AddWordHandler - handle");
 		//GRABBING ALL SLOT VALUES AND RETURNING THE MATCHING DATA OBJECT.
 		const slot = handlerInput.requestEnvelope.request.intent.slots;
-		const word = _.get(slot, 'word.value');
+		// const word = _.get(slot, 'word.value');
+		let word = Alexa.getSlotValue(handlerInput.requestEnvelope, 'word')
 		const more = _.get(slot, 'moredef.resolutions.resolutionsPerAuthority[0].values[0].value.id');
 		const confirm = handlerInput.requestEnvelope.request.intent.confirmationStatus;
 		const response = handlerInput.responseBuilder;
@@ -29,11 +30,11 @@ const AddWordHandler = {
 		// fetch definitions set session attributes
 		if (attributes.word !== word) {
 			attributes.word = word
-			attributes.definitionlist = await lookUpWord(word);
-			let [speechMain, speechMore] = fillSpeech(attributes.definitionlist, word);
+			attributes.definitionList = await lookUpWord(word);
+			let [speechMain, speechMore] = fillSpeech(attributes.definitionList, word);
 			attributes.speechMain = speechMain;
 			attributes.speechMore = speechMore;
-			handlerInput.attributesManager.setSessionAttributes(attributes);
+			await handlerInput.attributesManager.setSessionAttributes(attributes);
 		}
 		if (confirm === 'CONFIRMED') {
 			let newWord = await addUnknownFlashcard(handlerInput.attributesManager);
@@ -79,9 +80,6 @@ const AddWordHandler = {
 			return response.speak(helpMessage)
 				.getResponse();
 		}
-		// } catch (e) {
-		// 	console.log(e)
-		// }
 	}
 };
 

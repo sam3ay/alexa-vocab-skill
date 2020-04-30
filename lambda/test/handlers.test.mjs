@@ -1,7 +1,7 @@
 import ask from 'ask-sdk-test';
 import _ from 'lodash';
 import { handler as skillHandler } from '../index.mjs';
-import { generateResponse } from "./__mock__/nock-got.mjs";
+import { generateResponse, dynamoTable } from "./__mock__/nock-got.mjs";
 
 // import AWS from 'aws-sdk-mock';
 // AWS.mock('DynamoDB', 'putItem', function (params, callback) {
@@ -9,6 +9,14 @@ import { generateResponse } from "./__mock__/nock-got.mjs";
 // });
 // initialize the testing framework
 const skillSettings = {
+	appId: process.env.AMZN_APP_ID,
+	userId: 'amzn1.ask.account.VOID',
+	deviceId: 'amzn1.ask.device.VOID',
+	locale: 'en-US',
+	debug: true,
+};
+
+const fakeSkillSettings = {
 	appId: 'amzn1.ask.skill.00000000-0000-0000-0000-000000000000',
 	userId: 'amzn1.ask.account.VOID',
 	deviceId: 'amzn1.ask.device.VOID',
@@ -18,6 +26,7 @@ const skillSettings = {
 
 
 const alexaTest = new ask.AlexaTest(skillHandler, skillSettings).withDynamoDBPersistence('vocab-skill', 'id', 'Vocab_List');
+const alexaFail = new ask.AlexaTest(skillHandler, fakeSkillSettings);
 
 describe('LaunchRequest', () => {
 	alexaTest.test([
@@ -128,7 +137,6 @@ describe('HelpIntent', () => {
 	]);
 });
 
-
 describe('SessionEndIntent', () => {
 	alexaTest.test([
 		{
@@ -159,4 +167,27 @@ describe('RepeatIntent', () => {
 			}
 		])
 	})
+})
+
+
+describe('ReviewIntent', () => {
+	describe('Ask question', () => {
+		alexaTest.test([
+			{
+				request: new ask.IntentRequestBuilder(skillSettings, 'ReviewIntent').build(),
+				saysLike: 'What is the definition',
+				withStoredAttributes: dynamoTable,
+			}
+		]);
+	});
+	describe('Correct Answer', () => {
+		alexaTest.test([
+			{
+				request: new ask.IntentRequestBuilder(skillSettings, 'ReviewIntent').withSlotResolution('definition', 'def', 'definition', '001').build(),
+				saysLike: 'Congrats',
+				withSessionAttributes: { 'definitions': ['Heya', 'more', 'where'] },
+				ignoreQuestionCheck: true
+			}
+		]);
+	});
 })

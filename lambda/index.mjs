@@ -8,12 +8,13 @@
 import Alexa from 'ask-sdk';
 
 import {
-  LaunchRequestHandler,
   AddWordHandler,
-  HelpHandler,
-  ExitHandler,
-  RepeatHandler,
   ErrorHandler,
+  ExitHandler,
+  HelpHandler,
+  LaunchRequestHandler,
+  RepeatHandler,
+  ReviewHandler,
   SessionEndedRequestHandler,
 } from './handlers/index.mjs';
 
@@ -22,6 +23,7 @@ const skillBuilder = Alexa.SkillBuilders.custom();
 
 /* LAMBDA SETUP */
 const handler = skillBuilder
+  .withSkillId(process.env.AMZN_APP_ID)
   .withPersistenceAdapter(new Alexa.DynamoDbPersistenceAdapter({
     tableName: 'vocab-skill',
     // createTable: true,
@@ -30,6 +32,7 @@ const handler = skillBuilder
   .addRequestHandlers(
     LaunchRequestHandler,
     AddWordHandler,
+    ReviewHandler,
     RepeatHandler,
     HelpHandler,
     ExitHandler,

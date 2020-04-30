@@ -1,12 +1,13 @@
 import text from '../libs/handlerhelp.mjs';
+import Alexa from 'ask-sdk';
 const helpMessage = text.helpMessage
 
 const HelpHandler = {
 	canHandle(handlerInput) {
 		console.log("Inside HelpHandler");
-		const request = handlerInput.requestEnvelope.request;
-		return request.type === 'IntentRequest' &&
-			request.intent.name === 'AMAZON.HelpHandler';
+		const requestEnv = handlerInput.requestEnvelope;
+		return Alexa.getRequestType(requestEnv) === 'IntentRequest' &&
+			Alexa.getIntentName(requestEnv) === 'AMAZON.HelpHandler';
 	},
 	handle(handlerInput) {
 		console.log("Inside HelpHandler - handle");

@@ -1,18 +1,20 @@
-import LaunchRequestHandler from './launch-handler.mjs';
 import AddWordHandler from './add-word-handler.mjs';
-import SessionEndedRequestHandler from './sessionended-handler.mjs'
-import HelpHandler from './help-handler.mjs';
-import ExitHandler from './exit-handler.mjs';
-import RepeatHandler from './repeat-handler.mjs';
 import ErrorHandler from './errorhandler.mjs';
+import ExitHandler from './exit-handler.mjs';
+import HelpHandler from './help-handler.mjs';
+import LaunchRequestHandler from './launch-handler.mjs';
+import RepeatHandler from './repeat-handler.mjs';
+import ReviewHandler from './review-handler.mjs'
+import SessionEndedRequestHandler from './sessionended-handler.mjs'
 
 
 export {
-	LaunchRequestHandler,
 	AddWordHandler,
+	LaunchRequestHandler,
 	HelpHandler,
+	ErrorHandler,
 	ExitHandler,
 	RepeatHandler,
-	ErrorHandler,
+	ReviewHandler,
 	SessionEndedRequestHandler,
 };
