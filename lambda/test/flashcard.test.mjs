@@ -2,9 +2,9 @@ import fc from "fast-check";
 import chai from 'chai';
 import sinon from 'sinon';
 import _ from 'lodash';
-import { addUnknownFlashcard, randomUnknownWord } from '../libs/flashcard-helper.mjs'
+import { addUnknownFlashcard, randomUnknownWord, getQuestion } from '../libs/flashcard-helper.mjs';
 
-var expect = chai.expect
+var expect = chai.expect;
 
 
 describe("Given an deck based object", () => {
@@ -119,6 +119,21 @@ describe('Given an array', () => {
 				(property1, property2, property3) => {
 					let randArray = [property1, property2, property3];
 					expect(randomUnknownWord(randArray)).to.be.oneOf(randArray);
+				}
+			)
+		)
+	});
+	it("retrieves speech and all definitions from an array", () => {
+		fc.assert(
+			fc.property(
+				fc.lorem(20, false), fc.lorem(10, true),
+				fc.lorem(15, true), fc.lorem(20, true), fc.lorem(30, true),
+				(word, def1, def2, def3, def4) => {
+					let flashcard = { [word]: [[def1, def2], [def3, def4]] };
+					let flatArray = [def2, def4]
+					let [speech, definitions] = getQuestion(flashcard)
+					expect(definitions).to.deep.equal(flatArray);
+					expect(speech).to.equal(`What is the definition of ${word}?`);
 				}
 			)
 		)

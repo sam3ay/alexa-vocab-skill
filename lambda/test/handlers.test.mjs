@@ -177,6 +177,7 @@ describe('ReviewIntent', () => {
 				request: new ask.IntentRequestBuilder(skillSettings, 'ReviewIntent').build(),
 				saysLike: 'What is the definition',
 				withStoredAttributes: dynamoTable,
+				elicitsSlot: 'definition',
 			}
 		]);
 	});

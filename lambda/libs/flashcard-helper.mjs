@@ -54,7 +54,7 @@ function getQuestion(attributes) {
  * @param {string} updateType
  * @param {string} slotType slot to update
  * @param {string} idName slot value identifier 
- * @param {array} valueArray array of "tuples"
+ * @param {array} valueArray values to use to update
  * @param {string} dialogType Directive type
  */
 function createDirective(updateType, slotType, idName, valueArray, dialogType = 'Dialog.UpdateDynamicEntities') {
