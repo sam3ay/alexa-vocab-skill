@@ -7,11 +7,13 @@ const newWelcomeMessage = text.newWelcomeMessage
 
 const LaunchRequestHandler = {
 	canHandle(handlerInput) {
-		return Alexa.getRequestType(handlerInput.requestEnvelope) === `LaunchRequest`;
+		return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
 	},
 	async handle(handlerInput) {
-		const attributes = await handlerInput.attributesManager.getPersistentAttributes();
-		if (_.isEmpty(attributes)) {
+		const attributes = await handlerInput.attributesManager.getSessionAttributes();
+		attributes.flashCards = await handlerInput.attributesManager.getPersistentAttributes();
+		handlerInput.attributesManager.setSessionAttributes(attributes);
+		if (_.isEmpty(attributes.flashCards)) {
 			return handlerInput.responseBuilder
 				.speak(newWelcomeMessage)
 				.reprompt(helpMessage)

@@ -1,4 +1,4 @@
-import AddWordHandler from './add-word-handler.mjs';
+import { StartedAddWordHandler, InProgressAddWordHandler, CompletedAddWordHandler } from './add-word-handler.mjs';
 import ErrorHandler from './errorhandler.mjs';
 import ExitHandler from './exit-handler.mjs';
 import HelpHandler from './help-handler.mjs';
@@ -9,7 +9,9 @@ import SessionEndedRequestHandler from './sessionended-handler.mjs'
 
 
 export {
-	AddWordHandler,
+	StartedAddWordHandler,
+	InProgressAddWordHandler,
+	CompletedAddWordHandler,
 	LaunchRequestHandler,
 	HelpHandler,
 	ErrorHandler,

@@ -1,24 +1,6 @@
 import _ from 'lodash';
 
 
-/** Update flashcard with unknown word
- * 
- * @param {object} attributesManager Interface handling session, request and persistence
- */
-async function addUnknownFlashcard(attributesManager) {
-	let flashcards = await attributesManager.getPersistentAttributes();
-	let attributes = await attributesManager.getSessionAttributes();
-	if (_.has(flashcards, `words.unknownWords.${attributes.word}`) || _.has(flashcards, `words.knownWords.${attributes.word}`)) {
-		return await false;
-	} else {
-		_.set(flashcards, `words.unknownWords.${attributes.word}`, attributes.definitionList);
-		await attributesManager.setPersistentAttributes(flashcards);
-		await attributesManager.savePersistentAttributes();
-		console.log(JSON.stringify(flashcards, null, 4), JSON.stringify(attributes, null, 4));
-		return await true;
-	}
-};
-
 /**
  * 
  * @param {array} keys array of strings
@@ -30,21 +12,21 @@ function randomUnknownWord(keys) {
 
 /**
  * 
- * @param {object} attributes object with words as strings and definitions as arrays
+ * @param {object} flashCards object with words as strings and definitions as arrays
  */
-function getFlashcard(attributes) {
-	let keys = Object.keys(attributes);
+function getFlashcard(flashCards) {
+	let keys = Object.keys(flashCards);
 	let word = randomUnknownWord(keys);
-	let definitions = attributes[word].reduce((acc, val) => acc.concat(val[1]), []);
+	let definitions = flashCards[word].reduce((acc, val) => acc.concat(val[1]), []);
 	return [word, definitions];
 }
 
 /**
  * 
- * @param {object} attributes object with words as strings and definitions as arrays
+ * @param {object} flashCards object with words as strings and definitions as arrays
  */
-function getQuestion(attributes) {
-	let [word, definition] = getFlashcard(attributes);
+function getQuestion(flashCards) {
+	let [word, definition] = getFlashcard(flashCards);
 	let speech = `What is the definition of ${word}?`;
 	return [speech, definition]
 }
@@ -79,12 +61,19 @@ function createDirective(updateType, slotType, idName, valueArray, dialogType = 
 	return directive
 }
 
+function checkDeck(flashCards, word) {
+	if (_.has(flashCards, `words.unknownWords.${word}`) || _.has(flashCards, `words.knownWords.${word}`)) {
+		return true;
+	} else {
+		return false;
+	};
+};
 
 
 export {
-	addUnknownFlashcard,
 	createDirective,
 	randomUnknownWord,
 	getFlashcard,
-	getQuestion
+	getQuestion,
+	checkDeck
 }

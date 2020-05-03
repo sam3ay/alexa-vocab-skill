@@ -8,7 +8,9 @@
 import Alexa from 'ask-sdk';
 
 import {
-  AddWordHandler,
+  StartedAddWordHandler,
+  InProgressAddWordHandler,
+  CompletedAddWordHandler,
   ErrorHandler,
   ExitHandler,
   HelpHandler,
@@ -31,7 +33,9 @@ const handler = skillBuilder
   }))
   .addRequestHandlers(
     LaunchRequestHandler,
-    AddWordHandler,
+    StartedAddWordHandler,
+    InProgressAddWordHandler,
+    CompletedAddWordHandler,
     ReviewHandler,
     RepeatHandler,
     HelpHandler,

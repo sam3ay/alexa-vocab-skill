@@ -15,7 +15,6 @@ const ReviewHandler = {
 		const slot = handlerInput.requestEnvelope.request.intent.slots;
 		const db_attributes = await handlerInput.attributesManager.getPersistentAttributes();
 		let answer = _.get(slot, 'definition');
-		console.log(answer)
 		const resolutions = 'resolutions.resolutionsPerAuthority[0].values[0].value.id';
 		const attributes = await handlerInput.attributesManager.getSessionAttributes();
 		// Go through keys and retrieve 10 words

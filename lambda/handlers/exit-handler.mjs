@@ -13,7 +13,10 @@ const ExitHandler = {
 			Alexa.getIntentName(requestEnv) === 'AMAZON.CancelIntent'
 		);
 	},
-	handle(handlerInput) {
+	async handle(handlerInput) {
+		const attributes = await handlerInput.attributesManager.getSessionAttributes();
+		await handlerInput.attributesManager.setPersistentAttributes(attributes.flashCards);
+		await handlerInput.attributesManager.savePersistentAttributes();
 		return handlerInput.responseBuilder
 			.speak(exitSkillMessage)
 			.getResponse();

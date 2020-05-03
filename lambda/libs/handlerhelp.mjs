@@ -2,11 +2,11 @@ const text = {
 	addMessage: "Would you like to add",
 	exitSkillMessage: "Ok, till next time.",
 	helpMessage: "Would you like to add a word or start a review?",
-	newWelcomeMessage: "Welcome to Vocab list.",
+	newWelcomeMessage: "Welcome to Vocab skill.",
 	noRepeat: "Sorry, Would you like to add a word or start a review?",
 	NoWord: "Sorry,",
 	wordExist: "",
-	welcomeMessage: "Welcome back to Vocab list"
+	welcomeMessage: "Welcome back to Vocab skill"
 };
 
 /**
@@ -32,7 +32,16 @@ function fillSpeech(inputarray, word) {
 	return [outString, outMoreString];
 };
 
+function checkDeck(flashCards, word) {
+	if (_.has(flashCards, 'words.unknownWords') || _.has(flashCards, 'words.knownWords')) {
+		return true;
+	} else {
+		return false;
+	};
+};
+
 export default text;
 export {
-	fillSpeech
+	fillSpeech,
+	checkDeck
 }
