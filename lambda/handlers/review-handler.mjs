@@ -19,7 +19,7 @@ const StartReviewHandler = {
 		let [speech, definitions, word] = getQuestion(_.get(attributes.flashCards, 'words.unknownWords'));
 		attributes.word = word
 		attributes.definitions = definitions
-		let updateDefinitionsDirective = createDirective('UPDATE', 'AnyDefinition', 'definition', definitions);
+		let updateDefinitionsDirective = createDirective('REPLACE', 'AnyDefinition', 'definition', definitions);
 		// Ask for the definition of a word
 		if (Alexa.getDialogState(handlerInput.requestEnvelope) === 'STARTED') {
 			attributes.question = speech;
@@ -56,7 +56,7 @@ const InProgressReviewHandler = {
 		const lastWord = attributes.word
 		const lastDef = attributes.definitions
 		const [speech, definitions, word] = getQuestion(_.get(attributes.flashCards, 'words.unknownWords'));
-		const updateDefinitionsDirective = createDirective('UPDATE', 'AnyDefinition', 'definition', definitions);
+		const updateDefinitionsDirective = createDirective('REPLACE', 'AnyDefinition', 'definition', definitions);
 		attributes.word = word
 		attributes.definitions = definitions
 		if (idName >= 1) {
