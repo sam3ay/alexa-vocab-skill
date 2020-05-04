@@ -2,7 +2,7 @@ import fc from "fast-check";
 import chai from 'chai';
 import sinon from 'sinon';
 import _ from 'lodash';
-import { randomUnknownWord, getQuestion, checkDeck } from '../libs/flashcard-helper.mjs';
+import { randomUnknownWord, getQuestion, checkDeck, createSlotValues } from '../libs/flashcard-helper.mjs';
 
 var expect = chai.expect;
 
@@ -92,12 +92,29 @@ describe('Given an array', () => {
 				fc.lorem(15, true), fc.lorem(20, true), fc.lorem(30, true),
 				(word, def1, def2, def3, def4) => {
 					let flashcard = { [word]: [[def1, def2], [def3, def4]] };
-					let flatArray = [def2, def4]
-					let [speech, definitions] = getQuestion(flashcard)
+					let flatArray = [def2, def4];
+					let [speech, definitions, questWord] = getQuestion(flashcard);
+					expect(questWord).to.equal(word);
 					expect(definitions).to.deep.equal(flatArray);
 					expect(speech).to.equal(`What is the definition of ${word}?`);
 				}
 			)
 		)
 	});
+	it("builds a slot value object", () => {
+		fc.assert(
+			fc.property(
+				fc.array(fc.lorem(20, true), 1, 10), (valarr) => {
+					let randNum = Math.random * valarr.length << 0;
+					let val = {
+						id: `${randNum}`,
+						name: {
+							value: valarr[randNum]
+						}
+					};
+					let checkArray = createSlotValues(valarr);
+					expect(checkArray[randNum]).to.deep.equal(val);
+				})
+		)
+	})
 });

@@ -263,12 +263,20 @@ describe('RepeatIntent', () => {
 
 
 describe('ReviewIntent', () => {
-	describe('Ask question', () => {
+	describe('Ask question on launch', () => {
 		alexaTest.test([
 			{
-				request: new ask.IntentRequestBuilder(skillSettings, 'ReviewIntent').build(),
+				request: new IntentBuilder(skillSettings, 'ReviewIntent').withDialogState('STARTED').build(),
 				saysLike: 'What is the definition',
-				withStoredAttributes: dynamoTable,
+				withSessionAttributes: {
+					flashCards: {
+						words: {
+							unknownWords: {
+								bear: ['multidef', 'moredef']
+							}
+						}
+					}
+				},
 				elicitsSlot: 'definition',
 			}
 		]);
@@ -276,10 +284,40 @@ describe('ReviewIntent', () => {
 	describe('Correct Answer', () => {
 		alexaTest.test([
 			{
-				request: new ask.IntentRequestBuilder(skillSettings, 'ReviewIntent').withSlotResolution('definition', 'def', 'definition', '001').build(),
+				request: new IntentBuilder(skillSettings, 'ReviewIntent').withSlotResolution('definition', 'def', 'definition', '001').withDialogState("IN_PROGRESS").build(),
 				saysLike: 'Congrats',
-				withSessionAttributes: { 'definitions': ['Heya', 'more', 'where'] },
-				ignoreQuestionCheck: true
+				withSessionAttributes: {
+					definitions: ['Heya', 'more', 'where'],
+					word: 'test',
+					flashCards: {
+						words: {
+							unknownWords: {
+								bear: ['multidef', 'moredef']
+							}
+						}
+					}
+				},
+				elicitsSlot: 'definition'
+			}
+		]);
+	});
+	describe('Incorrect Answer', () => {
+		alexaTest.test([
+			{
+				request: new IntentBuilder(skillSettings, 'ReviewIntent').withSlotResolution('definition', 'def', 'definition', '000').withDialogState("IN_PROGRESS").build(),
+				saysLike: 'Not quite',
+				withSessionAttributes: {
+					definitions: ['Heya', 'more', 'where'],
+					word: 'test',
+					flashCards: {
+						words: {
+							unknownWords: {
+								bear: ['multidef', 'moredef']
+							}
+						}
+					}
+				},
+				elicitsSlot: 'definition'
 			}
 		]);
 	});

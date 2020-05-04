@@ -26,11 +26,27 @@ function getFlashcard(flashCards) {
  * @param {object} flashCards object with words as strings and definitions as arrays
  */
 function getQuestion(flashCards) {
-	let [word, definition] = getFlashcard(flashCards);
+	let [word, definitions] = getFlashcard(flashCards);
 	let speech = `What is the definition of ${word}?`;
-	return [speech, definition]
+	return [speech, definitions, word]
 }
 
+/**
+ * 
+ * @param valueArray depth 0 list of strings
+ */
+function createSlotValues(valueArray) {
+	let outArray = []
+	for (let i = 0; i < valueArray.length; i++) {
+		outArray.push({
+			id: `${i}`,
+			name: {
+				value: valueArray[i]
+			}
+		})
+	}
+	return outArray
+}
 /**
  * 
  * @param {string} updateType
@@ -40,21 +56,14 @@ function getQuestion(flashCards) {
  * @param {string} dialogType Directive type
  */
 function createDirective(updateType, slotType, idName, valueArray, dialogType = 'Dialog.UpdateDynamicEntities') {
+	const directiveValues = createSlotValues(valueArray)
 	let directive = {
 		type: dialogType,
 		updateBehavior: updateType,
 		types: [
 			{
 				name: slotType,
-				values: [
-					{
-						id: idName,
-						name: {
-							value: valueArray[0],
-							synonyms: valueArray.slice(1)
-						}
-					}
-				]
+				values: directiveValues
 			}
 		]
 	};
@@ -71,9 +80,10 @@ function checkDeck(flashCards, word) {
 
 
 export {
+	checkDeck,
 	createDirective,
-	randomUnknownWord,
+	createSlotValues,
 	getFlashcard,
 	getQuestion,
-	checkDeck
+	randomUnknownWord
 }

@@ -5,6 +5,7 @@ const text = {
 	newWelcomeMessage: "Welcome to Vocab skill.",
 	noRepeat: "Sorry, Would you like to add a word or start a review?",
 	NoWord: "Sorry,",
+	reviewStart: "",
 	wordExist: "",
 	welcomeMessage: "Welcome back to Vocab skill"
 };

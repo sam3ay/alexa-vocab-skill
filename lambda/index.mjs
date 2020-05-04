@@ -9,14 +9,15 @@ import Alexa from 'ask-sdk';
 
 import {
   StartedAddWordHandler,
+  StartReviewHandler,
   InProgressAddWordHandler,
+  InProgressReviewHandler,
   CompletedAddWordHandler,
   ErrorHandler,
   ExitHandler,
   HelpHandler,
   LaunchRequestHandler,
   RepeatHandler,
-  ReviewHandler,
   SessionEndedRequestHandler,
 } from './handlers/index.mjs';
 
@@ -34,9 +35,10 @@ const handler = skillBuilder
   .addRequestHandlers(
     LaunchRequestHandler,
     StartedAddWordHandler,
+    StartReviewHandler,
     InProgressAddWordHandler,
+    InProgressReviewHandler,
     CompletedAddWordHandler,
-    ReviewHandler,
     RepeatHandler,
     HelpHandler,
     ExitHandler,
