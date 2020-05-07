@@ -11,7 +11,7 @@ function randomUnknownWord(keys) {
 };
 
 /**
- * 
+ * TODO rework to include python lambda callout
  * @param {object} flashCards object with words as strings and definitions as arrays
  */
 function getFlashcard(flashCards) {
@@ -26,9 +26,9 @@ function getFlashcard(flashCards) {
  * @param {object} flashCards object with words as strings and definitions as arrays
  */
 function getQuestion(flashCards) {
-	let [word, definitions] = getFlashcard(flashCards);
+	let [word, semanticDef] = getFlashcard(flashCards);
 	let speech = `What is the definition of ${word}?`;
-	return [speech, definitions, word]
+	return [speech, word, semanticDef]
 }
 
 /**
@@ -46,29 +46,15 @@ function createSlotValues(valueArray) {
 		})
 	}
 	return outArray
-}
-/**
- * 
- * @param {string} updateType
- * @param {string} slotType slot to update
- * @param {string} idName slot value identifier 
- * @param {array} valueArray values to use to update
- * @param {string} dialogType Directive type
- */
-function createDirective(updateType, slotType, idName, valueArray, dialogType = 'Dialog.UpdateDynamicEntities') {
-	const directiveValues = createSlotValues(valueArray)
-	let directive = {
-		type: dialogType,
-		updateBehavior: updateType,
-		types: [
-			{
-				name: slotType,
-				values: directiveValues
-			}
-		]
+};
+
+function testDefinition(answer, definition) {
+	if (answer == 'right') {
+		return [true, definition[0]];
+	} else {
+		return [false, definition[1]];
 	};
-	return directive
-}
+};
 
 function checkDeck(flashCards, word) {
 	if (_.has(flashCards, `words.unknownWords.${word}`) || _.has(flashCards, `words.knownWords.${word}`)) {
@@ -81,7 +67,7 @@ function checkDeck(flashCards, word) {
 
 export {
 	checkDeck,
-	createDirective,
+	testDefinition,
 	createSlotValues,
 	getFlashcard,
 	getQuestion,

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import Alexa from 'ask-sdk';
-import { getQuestion, createDirective } from '../libs/flashcard-helper.mjs';
+import { getQuestion, testDefinition } from '../libs/flashcard-helper.mjs';
 import text from '../libs/handlerhelp.mjs';
 
 const StartReviewHandler = {
@@ -16,10 +16,9 @@ const StartReviewHandler = {
 	async handle(handlerInput) {
 		console.log("Inside StartReviewIntent - handle")
 		let attributes = await handlerInput.attributesManager.getSessionAttributes()
-		let [speech, definitions, word] = getQuestion(_.get(attributes.flashCards, 'words.unknownWords'));
-		attributes.word = word
-		attributes.definitions = definitions
-		let updateDefinitionsDirective = createDirective('REPLACE', 'AnyDefinition', 'definition', definitions);
+		const [speech, word, semanticDef] = getQuestion(_.get(attributes.flashCards, 'words.unknownWords'));
+		attributes.word = word;
+		attributes.semanticDef = semanticDef
 		// Ask for the definition of a word
 		if (Alexa.getDialogState(handlerInput.requestEnvelope) === 'STARTED') {
 			attributes.question = speech;
@@ -31,7 +30,6 @@ const StartReviewHandler = {
 		return handlerInput.responseBuilder
 			.speak(attributes.lastSpeech)
 			.reprompt(attributes.lastSpeech)
-			.addDirective(updateDefinitionsDirective)
 			.addElicitSlotDirective('definition')
 			.getResponse();
 	}
@@ -48,29 +46,28 @@ const InProgressReviewHandler = {
 	},
 	async handle(handlerInput) {
 		console.log("Inside ReviewIntent- handle");
-		let attributes = await handlerInput.attributesManager.getSessionAttributes()
-		const slot = handlerInput.requestEnvelope.request.intent.slots;
-		const answer = _.get(slot, 'definition');
-		const resolutions = 'resolutions.resolutionsPerAuthority[0].values[0].value.id';
-		const idName = parseInt(_.get(answer, resolutions))
-		const lastWord = attributes.word
-		const lastDef = attributes.definitions
-		const [speech, definitions, word] = getQuestion(_.get(attributes.flashCards, 'words.unknownWords'));
-		const updateDefinitionsDirective = createDirective('REPLACE', 'AnyDefinition', 'definition', definitions);
-		attributes.word = word
-		attributes.definitions = definitions
-		if (idName >= 1) {
-			attributes.lastSpeech = `Congrats, ${lastWord} does mean ${lastDef[idName]}. Next Question. ${speech}`;
-		} else {
-			attributes.lastSpeech = `Not quite, ${lastWord} means ${lastDef[0]}. Next Question. ${speech}?`;
+		try {
+			let attributes = await handlerInput.attributesManager.getSessionAttributes();
+			const answer = Alexa.getSlotValue(handlerInput.requestEnvelope, 'definition');
+			const lastWord = attributes.word;
+			const [isCorrect, lastDef] = testDefinition(answer, attributes.semanticDef);
+			const [speech, word, semanticDef] = getQuestion(_.get(attributes.flashCards, 'words.unknownWords'));
+			attributes.word = word;
+			attributes.semanticDef = semanticDef;
+			if (isCorrect) {
+				attributes.lastSpeech = `Congrats, ${lastWord} does mean ${lastDef}. Next Question. ${speech}`;
+			} else {
+				attributes.lastSpeech = `Not quite, ${lastWord} means ${lastDef}. Next Question. ${speech}?`;
+			}
+			await handlerInput.attributesManager.setSessionAttributes(attributes);
+			return handlerInput.responseBuilder
+				.speak(attributes.lastSpeech)
+				.reprompt(attributes.lastSpeech)
+				.addElicitSlotDirective('definition')
+				.getResponse();
+		} catch (e) {
+			console.log(e)
 		}
-		await handlerInput.attributesManager.setSessionAttributes(attributes);
-		return handlerInput.responseBuilder
-			.speak(attributes.lastSpeech)
-			.reprompt(attributes.lastSpeech)
-			.addDirective(updateDefinitionsDirective)
-			.addElicitSlotDirective('definition')
-			.getResponse();
 	},
 };
 

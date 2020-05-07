@@ -93,7 +93,7 @@ describe('Given an array', () => {
 				(word, def1, def2, def3, def4) => {
 					let flashcard = { [word]: [[def1, def2], [def3, def4]] };
 					let flatArray = [def2, def4];
-					let [speech, definitions, questWord] = getQuestion(flashcard);
+					let [speech, questWord, definitions] = getQuestion(flashcard);
 					expect(questWord).to.equal(word);
 					expect(definitions).to.deep.equal(flatArray);
 					expect(speech).to.equal(`What is the definition of ${word}?`);

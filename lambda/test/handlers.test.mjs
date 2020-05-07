@@ -284,10 +284,10 @@ describe('ReviewIntent', () => {
 	describe('Correct Answer', () => {
 		alexaTest.test([
 			{
-				request: new IntentBuilder(skillSettings, 'ReviewIntent').withSlotResolution('definition', 'def', 'definition', '001').withDialogState("IN_PROGRESS").build(),
+				request: new IntentBuilder(skillSettings, 'ReviewIntent').withSlot('definition', 'right').withDialogState("IN_PROGRESS").build(),
 				saysLike: 'Congrats',
 				withSessionAttributes: {
-					definitions: ['Heya', 'more', 'where'],
+					semanticDef: ['Heya', 'more', 'where'],
 					word: 'test',
 					flashCards: {
 						words: {
@@ -304,10 +304,10 @@ describe('ReviewIntent', () => {
 	describe('Incorrect Answer', () => {
 		alexaTest.test([
 			{
-				request: new IntentBuilder(skillSettings, 'ReviewIntent').withSlotResolution('definition', 'def', 'definition', '000').withDialogState("IN_PROGRESS").build(),
+				request: new IntentBuilder(skillSettings, 'ReviewIntent').withSlot('definition', 'wrong').withDialogState("IN_PROGRESS").build(),
 				saysLike: 'Not quite',
 				withSessionAttributes: {
-					definitions: ['Heya', 'more', 'where'],
+					semanticDef: ['Heya', 'more', 'where'],
 					word: 'test',
 					flashCards: {
 						words: {
