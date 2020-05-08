@@ -1,7 +1,7 @@
 {
   "interactionModel": {
     "languageModel": {
-      "invocationName": "vocab list",
+      "invocationName": "vocab skill",
       "intents": [
         {
           "name": "AMAZON.CancelIntent",
@@ -24,33 +24,22 @@
           "samples": []
         },
         {
-          "name": "AnswerIntent",
+          "name": "ReviewIntent",
           "slots": [
             {
               "name": "definition",
-              "type": "AnyDefinition"
-            },
-            {
-              "name": "word",
-              "type": "AnyWord"
+              "type": "AnyDefinition",
+              "samples": [
+                "{definition}",
+                "means {definition}",
+                "The definition is {definition}"
+              ]
             }
           ],
           "samples": [
-            "{word} means {definition}",
-            "The definition of {word} is  {definition}",
-            "{definition}"
-          ]
-        },
-        {
-          "name": "QuizIntent",
-          "slots": [],
-          "samples": [
-            "start a quiz",
-            "start a quiz game",
-            "and start a quiz",
-            "and quiz me",
-            "for a quiz",
-            "a quiz"
+            "I want to review",
+            "I'd like to review",
+            "Review"
           ]
         },
         {
@@ -71,6 +60,7 @@
               "name": "moredef",
               "type": "YesNo",
               "samples": [
+                "I'd like to hear more",
                 "{moredef}",
                 "I'd like to hear {moredef}"
               ]
@@ -117,11 +107,13 @@
           "name": "AnyDefinition",
           "values": [
             {
-              "id": "0000",
+              "id": "000",
               "name": {
-                "value": "See more.",
+                "value": "I don't know",
                 "synonyms": [
-                  "next"
+                  "No Clue",
+                  "I have no Idea",
+                  "I'm not sure"
                 ]
               }
             }
@@ -167,6 +159,7 @@
       "intents": [
         {
           "name": "AddWordIntent",
+          "delegationStrategy": "SKILL_RESPONSE",
           "confirmationRequired": true,
           "prompts": {
             "confirmation": "Confirm.Intent.1012607185128"
@@ -187,7 +180,24 @@
               "confirmationRequired": false,
               "elicitationRequired": true,
               "prompts": {
-                "elicitation": "Elicit.Slot.158867913558.659865189134"
+                "elicitation": "Elicit.Slot.425997814712.756904122629"
+              }
+            }
+          ]
+        },
+        {
+          "name": "ReviewIntent",
+          "delegationStrategy": "SKILL_RESPONSE",
+          "confirmationRequired": false,
+          "prompts": {},
+          "slots": [
+            {
+              "name": "definition",
+              "type": "AnyDefinition",
+              "confirmationRequired": false,
+              "elicitationRequired": true,
+              "prompts": {
+                "elicitation": "Elicit.Slot.1056388008435.426002102504"
               }
             }
           ]
@@ -224,6 +234,24 @@
           {
             "type": "PlainText",
             "value": "Would you like to hear more definitions for {word} ."
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.425997814712.756904122629",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "Would you like to hear more definitions for {word} ?"
+          }
+        ]
+      },
+      {
+        "id": "Elicit.Slot.1056388008435.426002102504",
+        "variations": [
+          {
+            "type": "PlainText",
+            "value": "What was the definition?"
           }
         ]
       }
