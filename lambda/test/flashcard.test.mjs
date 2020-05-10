@@ -79,8 +79,11 @@ describe('Given an array', () => {
 			fc.property(
 				fc.lorem(10), fc.lorem(15), fc.lorem(30),
 				(property1, property2, property3) => {
+					let trueArray = [property1, property2, property3];
 					let randArray = [property1, property2, property3];
-					expect(randomUnknownWord(randArray)).to.be.oneOf(randArray);
+					let [randWord] = randomUnknownWord(randArray);
+					expect(randWord).to.not.be.oneOf(randArray);
+					expect(randWord).to.be.oneOf(trueArray);
 				}
 			)
 		)
@@ -93,7 +96,7 @@ describe('Given an array', () => {
 				(word, def1, def2, def3, def4) => {
 					let flashcard = { [word]: [[def1, def2], [def3, def4]] };
 					let flatArray = [def2, def4];
-					let [speech, questWord, definitions] = getQuestion(flashcard);
+					let [speech, questWord, definitions, wordlist] = getQuestion(flashcard);
 					expect(questWord).to.equal(word);
 					expect(definitions).to.deep.equal(flatArray);
 					expect(speech).to.equal(`What is the definition of ${word}?`);

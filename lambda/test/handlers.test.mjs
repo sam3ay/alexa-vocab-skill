@@ -292,7 +292,8 @@ describe('ReviewIntent', () => {
 					flashCards: {
 						words: {
 							unknownWords: {
-								bear: ['multidef', 'moredef']
+								bear: ['multidef', 'moredef'],
+								right: ['multidef', 'moredef']
 							}
 						}
 					}
@@ -312,12 +313,32 @@ describe('ReviewIntent', () => {
 					flashCards: {
 						words: {
 							unknownWords: {
-								bear: ['multidef', 'moredef']
+								bear: ['multidef', 'moredef'],
+								right: ['multidef', 'moredef']
 							}
 						}
 					}
 				},
 				elicitsSlot: 'definition'
+			}
+		]);
+	});
+	describe('Correct Answer, No more word', () => {
+		alexaTest.test([
+			{
+				request: new IntentBuilder(skillSettings, 'ReviewIntent').withSlot('definition', 'right').withDialogState("IN_PROGRESS").build(),
+				saysLike: 'Congrats',
+				withSessionAttributes: {
+					semanticDef: ['Heya', 'more', 'where'],
+					word: 'test',
+					flashCards: {
+						words: {
+							unknownWords: {
+								bear: ['multidef', 'moredef']
+							}
+						}
+					}
+				}
 			}
 		]);
 	});

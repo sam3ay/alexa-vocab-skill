@@ -7,28 +7,30 @@ import _ from 'lodash';
  */
 function randomUnknownWord(keys) {
 	// << floor division sub
-	return keys[keys.length * Math.random() << 0];
+	return keys.splice([keys.length * Math.random() << 0], 1);
 };
 
 /**
  * TODO rework to include python lambda callout
  * @param {object} flashCards object with words as strings and definitions as arrays
  */
-function getFlashcard(flashCards) {
-	let keys = Object.keys(flashCards);
-	let word = randomUnknownWord(keys);
+function getFlashcard(flashCards, keys) {
+	if (keys === undefined) {
+		keys = Object.keys(flashCards);
+	};
+	let [word] = randomUnknownWord(keys);
 	let definitions = flashCards[word].reduce((acc, val) => acc.concat(val[1]), []);
-	return [word, definitions];
+	return [word, definitions, keys];
 }
 
 /**
  * 
  * @param {object} flashCards object with words as strings and definitions as arrays
  */
-function getQuestion(flashCards) {
-	let [word, semanticDef] = getFlashcard(flashCards);
+function getQuestion(flashCards, keys = undefined) {
+	let [word, semanticDef, wordlist] = getFlashcard(flashCards, keys);
 	let speech = `What is the definition of ${word}?`;
-	return [speech, word, semanticDef]
+	return [speech, word, semanticDef, wordlist]
 }
 
 /**

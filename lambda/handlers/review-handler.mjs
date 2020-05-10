@@ -16,9 +16,10 @@ const StartReviewHandler = {
 	async handle(handlerInput) {
 		console.log("Inside StartReviewIntent - handle")
 		let attributes = await handlerInput.attributesManager.getSessionAttributes()
-		const [speech, word, semanticDef] = getQuestion(_.get(attributes.flashCards, 'words.unknownWords'));
+		const [speech, word, semanticDef, wordlist] = getQuestion(_.get(attributes.flashCards, 'words.unknownWords'));
 		attributes.word = word;
 		attributes.semanticDef = semanticDef
+		attributes.wordlist = wordlist
 		// Ask for the definition of a word
 		if (Alexa.getDialogState(handlerInput.requestEnvelope) === 'STARTED') {
 			attributes.question = speech;
@@ -51,20 +52,30 @@ const InProgressReviewHandler = {
 			const answer = Alexa.getSlotValue(handlerInput.requestEnvelope, 'definition');
 			const lastWord = attributes.word;
 			const [isCorrect, lastDef] = testDefinition(answer, attributes.semanticDef);
-			const [speech, word, semanticDef] = getQuestion(_.get(attributes.flashCards, 'words.unknownWords'));
+			const [speech, word, semanticDef, wordlist] = getQuestion(_.get(attributes.flashCards, 'words.unknownWords'), attributes.wordlist);
 			attributes.word = word;
 			attributes.semanticDef = semanticDef;
+			attributes.wordlist = wordlist;
 			if (isCorrect) {
-				attributes.lastSpeech = `Congrats, ${lastWord} does mean ${lastDef}. Next Question. ${speech}`;
+				attributes.lastSpeech = `Congrats, ${lastWord} does mean ${lastDef}.`;
 			} else {
-				attributes.lastSpeech = `Not quite, ${lastWord} means ${lastDef}. Next Question. ${speech}?`;
+				attributes.lastSpeech = `Not quite, ${lastWord} means ${lastDef}.`;
 			}
-			await handlerInput.attributesManager.setSessionAttributes(attributes);
-			return handlerInput.responseBuilder
-				.speak(attributes.lastSpeech)
-				.reprompt(attributes.lastSpeech)
-				.addElicitSlotDirective('definition')
-				.getResponse();
+			if (wordlist.length === 0) {
+				attributes.lastSpeech += ` You've completed your review. Would you like to add additional words or start a review?`
+				await handlerInput.attributesManager.setSessionAttributes(attributes);
+				return handlerInput.responseBuilder
+					.speak(attributes.lastSpeech)
+					.getResponse();
+			} else {
+				attributes.lastSpeech += ` Next Question. ${speech}?`
+				await handlerInput.attributesManager.setSessionAttributes(attributes);
+				return handlerInput.responseBuilder
+					.speak(attributes.lastSpeech)
+					.reprompt(attributes.lastSpeech)
+					.addElicitSlotDirective('definition')
+					.getResponse();
+			}
 		} catch (e) {
 			console.log(e)
 		}
