@@ -19,7 +19,9 @@
 	"xabikos.javascriptsnippets",
 	"ms-vscode.js-debug-nightly",
 	"ms-azuretools.vscode-docker",
-	"donjayamanne.python-extension-pack"
+	"visualstudioexptteam.vscodeintellicode",
+	"njpwerner.autodocstring",
+	"ms-python.python"
 ],
   "mounts": [
     "source=${localEnv:USERPROFILE}/data,target=/data,type=bind,consistency=cached"
