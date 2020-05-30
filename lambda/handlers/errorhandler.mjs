@@ -10,7 +10,6 @@ const ErrorHandler = {
 		console.log("Inside ErrorHandler - handle");
 		console.log(`Error handled: ${JSON.stringify(error)}`);
 		console.log(`Handler Input: ${JSON.stringify(handlerInput)}`);
-		console.log(error)
 
 		return handlerInput.responseBuilder
 			.speak(helpMessage)

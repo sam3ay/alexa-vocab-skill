@@ -1,22 +1,33 @@
+import text from '../libs/handlerhelp.mjs';
+import Alexa from 'ask-sdk';
+import _ from 'lodash';
+const noRepeat = text.noRepeat;
+
 const RepeatHandler = {
 	canHandle(handlerInput) {
 		console.log("Inside RepeatHandler");
-		const attributes = handlerInput.attributesManager.getSessionAttributes();
-		const request = handlerInput.requestEnvelope.request;
+		const requestEnv = handlerInput.requestEnvelope;
 
-		return attributes.state === states.QUIZ &&
-			request.type === 'IntentRequest' &&
-			request.intent.name === 'AMAZON.RepeatHandler';
+		return Alexa.getRequestType(requestEnv) === 'IntentRequest' &&
+			Alexa.getIntentName(requestEnv) === 'AMAZON.RepeatHandler';
 	},
 	handle(handlerInput) {
 		console.log("Inside RepeatHandler - handle");
-		const attributes = handlerInput.attributesManager.getSessionAttributes();
-		const question = getQuestion(attributes.counter, attributes.quizproperty, attributes.quizitem);
-
-		return handlerInput.responseBuilder
-			.speak(question)
-			.reprompt(question)
-			.getResponse();
+		const slot = handlerInput.requestEnvelope.request.intent.slots;
+		let attributes = handlerInput.attributesManager.getSessionAttributes();
+		let lastSpeech = _.get(attributes, 'lastSpeech');
+		console.log([attributes, lastSpeech, noRepeat])
+		if (lastSpeech !== undefined) {
+			return handlerInput.responseBuilder
+				.speak(lastSpeech)
+				.reprompt(lastSpeech)
+				.getResponse();
+		} else {
+			return handlerInput.responseBuilder
+				.speak(noRepeat)
+				.reprompt(noRepeat)
+				.getResponse();
+		}
 	},
 };
 

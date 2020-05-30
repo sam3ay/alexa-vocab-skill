@@ -1,94 +1,132 @@
-import { lookUpWord } from '../libs/word-search.mjs'
-import text from '../libs/handlerhelp.mjs';
 import _ from 'lodash';
+import Alexa from 'ask-sdk';
+import { lookUpWord } from '../libs/word-search.mjs';
+import { checkDeck } from '../libs/flashcard-helper.mjs';
+import text, { fillSpeech } from '../libs/handlerhelp.mjs';
 
 const helpMessage = text.helpMessage
 const addMessage = text.addMessage
 
+const StartedAddWordHandler = {
+	async canHandle(handlerInput) {
+		console.log("Inside StartedAddWordHandler");
+		const attributes = await handlerInput.attributesManager.getSessionAttributes()
+		const requestEnv = handlerInput.requestEnvelope;
+		return Alexa.getRequestType(requestEnv) === 'IntentRequest' &&
+			Alexa.getIntentName(requestEnv) === 'AddWordIntent' &&
+			(Alexa.getDialogState(requestEnv) === 'STARTED' || attributes.newWord);
+	},
+	async handle(handlerInput) {
+		console.log("Inside StartedAddWordHandler - handle");
+		const attributes = handlerInput.attributesManager.getSessionAttributes();
+		const currentIntent = handlerInput.requestEnvelope.request.intent;
+		const response = handlerInput.responseBuilder;
+		const word = Alexa.getSlotValue(handlerInput.requestEnvelope, 'word')
+		// fetch definitions set session attributes
+		await handlerInput.attributesManager.setSessionAttributes(attributes);
+		// Check if word already exists
+		if (checkDeck(attributes.flashCards, word)) {
+			delete currentIntent.slots.word.value;
+			attributes.newWord = true;
+			attributes.lastSpeech = `${word} has already been added. Would you like to add another word?`;
+			handlerInput.attributesManager.setSessionAttributes(attributes);
+			return response.speak(attributes.lastSpeech)
+				.reprompt(attributes.lastSpeech)
+				.addElicitSlotDirective('word')
+				.getResponse();
+		} else {
+			attributes.word = word
+			attributes.definitionList = await lookUpWord(word);
+			let [speechMain, speechMore] = fillSpeech(attributes.definitionList, word);
+			attributes.speechMain = speechMain;
+			attributes.speechMore = speechMore;
+			attributes.newWord = false;
+		}
+		// Check if more definitions are available
+		if (attributes.definitionList.length < 1) {
+			_.set(currentIntent, 'slots.moredef.value', 'No');
+			handlerInput.attributesManager.setSessionAttributes(attributes);
+			return response.speak(attributes.speechMain)
+				.reprompt(attributes.speechMain)
+				.addDelegateDirective(currentIntent)
+				.getResponse();
+		} else {
+			handlerInput.attributesManager.setSessionAttributes(attributes);
+			return response.speak(`${attributes.speechMain} Would you like to hear more definitions for ${word}?`)
+				.reprompt(`Would you like to hear more definitions for ${word}?`)
+				.addElicitSlotDirective('moredef')
+				.getResponse();
+		}
+	}
+}
+
 /**
  * TODO Add most used definition if add the most popular is spoken
  */
-const AddWordHandler = {
+const InProgressAddWordHandler = {
 	canHandle(handlerInput) {
-		console.log("Inside AddWordHandler");
-		const attributes = handlerInput.attributesManager.getSessionAttributes();
-		const request = handlerInput.requestEnvelope.request;
-		return request.type === 'IntentRequest' &&
-			request.intent.name === 'AddWordIntent';
+		console.log("Inside InProgressAddWordHandler");
+		const requestEnv = handlerInput.requestEnvelope;
+		return Alexa.getRequestType(requestEnv) === 'IntentRequest' &&
+			Alexa.getIntentName(requestEnv) === 'AddWordIntent' &&
+			Alexa.getDialogState(requestEnv) === 'IN_PROGRESS';
 	},
 	async handle(handlerInput) {
-		console.log("Inside AddWordHandler - handle");
+		console.log("Inside InProgressAddWordHandler - handle");
 		//GRABBING ALL SLOT VALUES AND RETURNING THE MATCHING DATA OBJECT.
 		const slot = handlerInput.requestEnvelope.request.intent.slots;
-		const word = _.get(slot, 'word.value');
+		const currentIntent = handlerInput.requestEnvelope.request.intent;
+		const word = Alexa.getSlotValue(handlerInput.requestEnvelope, 'word')
 		const more = _.get(slot, 'moredef.resolutions.resolutionsPerAuthority[0].values[0].value.id');
-		const confirm = handlerInput.requestEnvelope.request.intent.confirmationStatus
-		console.log(confirm)
 		const response = handlerInput.responseBuilder;
 		const attributes = await handlerInput.attributesManager.getSessionAttributes();
-		// fetch definitions set session attributes
-		if (attributes.word !== word) {
-			attributes.word = word
-			attributes.definitionlist = await lookUpWord(word);
-			let [speechMain, speechMore] = fillSpeech(attributes.definitionlist, word);
-			attributes.speechMain = speechMain;
-			attributes.speechMore = speechMore;
-			handlerInput.attributesManager.setSessionAttributes(attributes);
-		} else if (confirm === 'CONFIRMED') {
-			console.log('Inside confirmed')
-			let vocabCard = { [word]: attributes.definitionlist }
-			await handlerInput.attributesManager.setPersistentAttributes(vocabCard);
-			await handlerInput.attributesManager.savePersistentAttributes();
-			console.log(attributes)
-			handlerInput.attributesManager.setSessionAttributes(attributes);
-			return response.speak(`${word} has been added to your vocabulary list.`)
-				.getResponse();
-		} else if (confirm === 'DENIED') {
-			attributes[word] = undefined
+		if (more === '001') {
+			attributes.lastSpeech = `${attributes.speechMore} ${addMessage} ${word}?`;
 			await handlerInput.attributesManager.setSessionAttributes(attributes);
-			return response.speak(`Okay then`)
-				.getResponse();
-		};
-		if (more === undefined) {
-			// console.log(`${word}, ${more}, ${speechOutput}`)
-			return response.speak(attributes.speechMain)
-				.reprompt(`Would you like to hear more definitions for ${word}`)
-				.addElicitSlotDirective('moredef')
-				.getResponse();
-		} else if (more === '001') {
-			// console.log(`${word}, ${more}, ${speechOutMore}`)
-			return response.speak(attributes.speechMore)
+			return response.speak(attributes.lastSpeech)
+				.addDelegateDirective(currentIntent)
 				.getResponse();
 		} else {
-			console.log(handlerInput)
-			return response.speak(helpMessage)
+			attributes.lastSpeech = `Okay`;
+			await handlerInput.attributesManager.setSessionAttributes(attributes);
+			return response.speak(attributes.lastSpeech)
+				.addDelegateDirective(currentIntent)
 				.getResponse();
 		}
 	}
 };
 
-/***
- * TODO Template for interceptor
- */
+const CompletedAddWordHandler = {
+	canHandle(handlerInput) {
+		console.log("Inside CompletedAddWordHandler");
+		const requestEnv = handlerInput.requestEnvelope;
+		return Alexa.getRequestType(requestEnv) === 'IntentRequest' &&
+			Alexa.getIntentName(requestEnv) === 'AddWordIntent' &&
+			Alexa.getDialogState(requestEnv) === 'COMPLETED';
+	},
 
-// const dynamoDbPersistenceAdapter = new DynamoDbPersistenceAdapter({ tableName: 'FooTable' })
-
-// Add definitions based on one per part of speech
-function fillSpeech(inputarray, word) {
-	let outString = `As a ${inputarray[0][0]}, ${word}, is usually defined as: ${inputarray[0][1]}`;
-	let outMoreString = `I have ${(inputarray.length - 1)} more definitions for ${word}:`;
-	let partOfSpeech = ""
-	for (let i = 1; i < inputarray.length; i++) {
-		let part = inputarray[i][0];
-		let definition = inputarray[i][1];
-		if (part === partOfSpeech) {
-			outMoreString += `${i}. ${definition}.`;
+	async handle(handlerInput) {
+		const confirm = handlerInput.requestEnvelope.request.intent.confirmationStatus;
+		const response = handlerInput.responseBuilder;
+		const word = _.get(handlerInput, 'requestEnvelope.request.intent.slots.word.value');
+		const attributes = await handlerInput.attributesManager.getSessionAttributes()
+		if (confirm === 'CONFIRMED') {
+			_.set(attributes.flashCards, `words.unknownWords.${word}`, attributes.definitionList);
+			attributes.lastSpeech = `${word} has been added to your vocabulary list.`;
+			await handlerInput.attributesManager.setSessionAttributes(attributes);
+			return response.speak(attributes.lastSpeech)
+				.getResponse();
 		} else {
-			partOfSpeech = part
-			outMoreString += ` As a ${part}, ${i}. ${definition}.`;
-		}
-	};
-	return [outString, outMoreString];
-}
+			attributes.lastSpeech = `Okay, ${word} was not added.`;
+			await handlerInput.attributesManager.setSessionAttributes(attributes);
+			return response.speak(attributes.lastSpeech)
+				.getResponse();
+		};
+	}
+};
 
-export default AddWordHandler;
+export {
+	StartedAddWordHandler,
+	InProgressAddWordHandler,
+	CompletedAddWordHandler
+};
