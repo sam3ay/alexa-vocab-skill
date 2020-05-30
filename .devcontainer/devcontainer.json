@@ -9,18 +9,20 @@
   },
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
-    "formulahendry.code-runner",
-    "eamodio.gitlens",
-    "yzhang.markdown-all-in-one",
-    "anfuchs.alexa-code-snippets",
-    "mark-tucker.ask-cli-configure",
-    "ask-toolkit.alexa-skills-kit-toolkit",
-    "christian-kohler.npm-intellisense",
-    "eg2.vscode-npm-script",
-    "xabikos.javascriptsnippets",
-    "ms-vscode.js-debug-nightly",
-    "ms-azuretools.vscode-docker"
-  ],
+	"formulahendry.code-runner",
+	"eamodio.gitlens",
+	"yzhang.markdown-all-in-one",
+	"mark-tucker.ask-cli-configure",
+	"ask-toolkit.alexa-skills-kit-toolkit",
+	"christian-kohler.npm-intellisense",
+	"eg2.vscode-npm-script",
+	"xabikos.javascriptsnippets",
+	"ms-vscode.js-debug-nightly",
+	"ms-azuretools.vscode-docker",
+	"visualstudioexptteam.vscodeintellicode",
+	"njpwerner.autodocstring",
+	"ms-python.python"
+],
   "mounts": [
     "source=${localEnv:USERPROFILE}/data,target=/data,type=bind,consistency=cached"
   ],
@@ -30,5 +32,5 @@
   // Uncomment when using a ptrace-based debugger like C++, Go, and Rust
   // "runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined" ],
   // Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
-  "remoteUser": "node"
+  "remoteUser": "pynode"
 }

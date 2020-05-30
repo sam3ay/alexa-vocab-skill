@@ -248,7 +248,105 @@ function replyError() {
 		.reply(404, error_body)
 }
 
+const dynamoTable = {
+	"words": {
+		"unknownWords": {
+			"bear": [
+				[
+					"Part",
+					"(of a person) carry"
+				],
+				[
+					"Part",
+					"(of a vehicle or boat) convey (passengers or cargo)"
+				],
+				[
+					"Part",
+					"have or display as a visible mark or feature"
+				],
+				[
+					"Part",
+					"be called by (a name or title)"
+				],
+				[
+					"Part",
+					"carry or conduct oneself in a specified manner"
+				],
+				[
+					"Part",
+					"support; carry the weight of"
+				],
+				[
+					"Part",
+					"definition 1"
+				],
+				[
+					"Part",
+					"be able to accept or stand up to"
+				],
+				[
+					"Part",
+					"definition 2"
+				],
+				[
+					"Part",
+					"manage to tolerate (a situation or experience)"
+				],
+				[
+					"Part",
+					"strongly dislike"
+				],
+				[
+					"Part",
+					"give birth to (a child)"
+				],
+				[
+					"Part",
+					"(of a tree or plant) produce (fruit or flowers)"
+				],
+				[
+					"Part",
+					"turn and proceed in a specified direction"
+				],
+				[
+					"Noun",
+					"a large, heavy mammal that walks on the soles of its feet, having thick fur and a very short tail. Bears are related to the dog family but most species are omnivorous."
+				],
+				[
+					"Noun",
+					"a teddy bear."
+				],
+				[
+					"Noun",
+					"a nickname for Russia."
+				],
+				[
+					"Noun",
+					"a large, heavy, cumbersome man"
+				],
+				[
+					"Noun",
+					"a gay or bisexual man with a burly physique and a large amount of body hair"
+				],
+				[
+					"Noun",
+					"definition 3"
+				],
+				[
+					"Noun",
+					"something that is very difficult or unpleasant to deal with"
+				],
+				[
+					"Noun",
+					"a person who sells shares hoping to buy them back later at a lower price."
+				]
+			]
+		}
+	}
+}
+
 export {
 	generateResponse,
-	replyError
+	replyError,
+	dynamoTable
 }

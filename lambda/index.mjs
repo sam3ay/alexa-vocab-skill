@@ -5,28 +5,40 @@
 // Display Interface for your skill should be enabled through the Amazon developer console
 // See this screenshot - https://alexa.design/enabledisplay
 
-import Alexa from 'ask-sdk-core';
+import Alexa from 'ask-sdk';
 
 import {
-  LaunchRequestHandler,
-  AddWordHandler,
-  HelpHandler,
-  ExitHandler,
-  RepeatHandler,
+  StartedAddWordHandler,
+  StartReviewHandler,
+  InProgressAddWordHandler,
+  InProgressReviewHandler,
+  CompletedAddWordHandler,
   ErrorHandler,
+  ExitHandler,
+  HelpHandler,
+  LaunchRequestHandler,
+  RepeatHandler,
   SessionEndedRequestHandler,
 } from './handlers/index.mjs';
 
 /* CONSTANTS */
 const skillBuilder = Alexa.SkillBuilders.custom();
-const speechConsCorrect = ['Booya', 'All righty', 'Bam', 'Bazinga', 'Bingo', 'Boom', 'Bravo', 'Cha Ching', 'Cheers', 'Dynomite', 'Hip hip hooray', 'Hurrah', 'Hurray', 'Huzzah', 'Oh dear.  Just kidding.  Hurray', 'Kaboom', 'Kaching', 'Oh snap', 'Phew', 'Righto', 'Way to go', 'Well done', 'Whee', 'Woo hoo', 'Yay', 'Wowza', 'Yowsa'];
-const speechConsWrong = ['Argh', 'Aw man', 'Blarg', 'Blast', 'Boo', 'Bummer', 'Darn', "D'oh", 'Dun dun dun', 'Eek', 'Honk', 'Le sigh', 'Mamma mia', 'Oh boy', 'Oh dear', 'Oof', 'Ouch', 'Ruh roh', 'Shucks', 'Uh oh', 'Wah wah', 'Whoops a daisy', 'Yikes'];
 
 /* LAMBDA SETUP */
-export const handler = skillBuilder
+const handler = skillBuilder
+  .withSkillId(process.env.AMZN_APP_ID)
+  .withPersistenceAdapter(new Alexa.DynamoDbPersistenceAdapter({
+    tableName: 'vocab-skill',
+    // createTable: true,
+    attributesName: 'Vocab_List'
+  }))
   .addRequestHandlers(
     LaunchRequestHandler,
-    AddWordHandler,
+    StartedAddWordHandler,
+    StartReviewHandler,
+    InProgressAddWordHandler,
+    InProgressReviewHandler,
+    CompletedAddWordHandler,
     RepeatHandler,
     HelpHandler,
     ExitHandler,
@@ -34,3 +46,5 @@ export const handler = skillBuilder
   )
   .addErrorHandlers(ErrorHandler)
   .lambda();
+
+export { handler };

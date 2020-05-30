@@ -1,26 +1,29 @@
 {
-  "name": "basic",
+  "name": "vocab_skill",
   "version": "1.0.0",
-  "description": "",
-  "main": "./lambda/index.js",
+  "description": "Alexa skill to create Vocab cards",
+  "main": "./index.mjs",
   "type": "module",
   "scripts": {
     "test": "mocha"
   },
   "author": "sam3ay",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "ask-sdk": "^2.8.0",
-    "ask-sdk-model": "^1.28.0",
+    "ask-sdk-core": "^2.8.0",
     "got": "^10.7.0",
     "lodash": "^4.17.15"
   },
   "devDependencies": {
     "ask-sdk-test": "^2.3.0",
+    "aws-sdk-mock": "^5.1.0",
     "chai": "^4.2.0",
     "dotenv": "^8.2.0",
     "fast-check": "^1.24.1",
     "mocha": "^7.1.1",
-    "nock": "^12.0.3"
+    "nock": "^12.0.3",
+    "serverless-bundle": "^1.4.0",
+    "sinon": "^9.0.2"
   }
 }

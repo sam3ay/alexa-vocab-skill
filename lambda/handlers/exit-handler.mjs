@@ -1,19 +1,22 @@
 import text from '../libs/handlerhelp.mjs';
-const exitSkillMessage = text.exitSkillMessage
+import Alexa from 'ask-sdk';
+const exitSkillMessage = text.exitSkillMessage;
 
 const ExitHandler = {
 	canHandle(handlerInput) {
 		console.log("Inside ExitHandler");
-		const attributes = handlerInput.attributesManager.getSessionAttributes();
-		const request = handlerInput.requestEnvelope.request;
+		const requestEnv = handlerInput.requestEnvelope;
 
-		return request.type === `IntentRequest` && (
-			request.intent.name === 'AMAZON.StopIntent' ||
-			request.intent.name === 'AMAZON.PauseIntent' ||
-			request.intent.name === 'AMAZON.CancelIntent'
+		return Alexa.getRequestType(requestEnv) === `IntentRequest` && (
+			Alexa.getIntentName(requestEnv) === 'AMAZON.StopIntent' ||
+			Alexa.getIntentName(requestEnv) === 'AMAZON.PauseIntent' ||
+			Alexa.getIntentName(requestEnv) === 'AMAZON.CancelIntent'
 		);
 	},
-	handle(handlerInput) {
+	async handle(handlerInput) {
+		const attributes = await handlerInput.attributesManager.getSessionAttributes();
+		await handlerInput.attributesManager.setPersistentAttributes(attributes.flashCards);
+		await handlerInput.attributesManager.savePersistentAttributes();
 		return handlerInput.responseBuilder
 			.speak(exitSkillMessage)
 			.getResponse();
