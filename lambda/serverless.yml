@@ -29,3 +29,8 @@ functions:
     handler: index.handler 
     events:
       - alexaSkill: ${param:AWS_APP_ID}
+    environment:
+        AMZN_APP_ID: ${param:AWS_APP_ID}
+        OXFORD_ID: ${param:OXFORD_ID}
+        OXFORD_KEY: ${param:OXFORD_KEY}
+        ENDPOINT_NAME: ${param:ENDPOINT_NAME}
