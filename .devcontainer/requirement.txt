@@ -1,0 +1,6 @@
+torch
+black
+flake8
+pytest
+scipy
+sentence-transformers

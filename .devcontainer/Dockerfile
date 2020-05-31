@@ -24,12 +24,4 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
     && sudo ./aws/install \
     && rm -rf awscliv2.zip aws/ \
     && sudo chown -R $USER_UID:$USER_GID /home/${USERNAME}
-
-RUN pip install -U torch \
-    black \
-    flake8 \
-    pytest \
-    scipy \
-    sentence-transformers
-
 # USER ${USERNAME}
