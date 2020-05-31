@@ -57,9 +57,9 @@ const InProgressReviewHandler = {
         attributes.wordlist = wordlist;
         console.log(inference)
         if (inference.predict) {
-            attributes.lastSpeech = `Congrats, ${lastWord} does mean ${inference.sentence}.`;
+            attributes.lastSpeech = `Congrats, ${lastWord} does mean ${inference.sentence}`;
         } else {
-            attributes.lastSpeech = `Not quite, ${lastWord} means ${inference.sentence}.`;
+            attributes.lastSpeech = `Not quite, ${lastWord} means ${inference.sentence}`;
         };
         if (wordlist.length === 0) {
             attributes.lastSpeech += ` You've completed your review.`;
