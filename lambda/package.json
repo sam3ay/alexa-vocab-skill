@@ -10,11 +10,13 @@
   "author": "sam3ay",
   "license": "MIT",
   "dependencies": {
-    "@aws-sdk/client-sagemaker-runtime": "^1.0.0-alpha.1",
+    "@aws-sdk/client-sagemaker-runtime": "^1.0.0-gamma.2",
+    "@aws-sdk/types": "^1.0.0-gamma.1",
     "ask-sdk": "^2.8.0",
     "ask-sdk-core": "^2.8.0",
     "got": "^10.7.0",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "ask-sdk-test": "^2.3.0",

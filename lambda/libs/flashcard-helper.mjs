@@ -63,6 +63,17 @@ async function testDefinition(answer, definition) {
         Accept: 'application/json'
     };
     const client = new sagemaker.SageMakerRuntime();
+    client.middlewareStack.add(
+        (next, context) => args => {
+            args.request.headers["Custom-Header"] = "value";
+            console.log("\n -- printed from inside middleware -- \n");
+            console.log(args)
+            return next(args);
+        },
+        {
+            step: "build"
+        }
+    );
     let response = await client.invokeEndpoint(params);
     return response;
 };

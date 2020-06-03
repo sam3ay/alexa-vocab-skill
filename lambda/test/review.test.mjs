@@ -5,7 +5,7 @@ import { handler as skillHandler } from '../index.mjs';
 import { IntentBuilder, skillSettings } from "./__mock__/alexa-intents.mjs";
 import sagemaker from '@aws-sdk/client-sagemaker-runtime';
 
-var stub = sinon.stub(sagemaker.SageMakerRuntime.prototype, 'invokeEndpoint').returns(0);
+// var stub = sinon.stub(sagemaker.SageMakerRuntime.prototype, 'invokeEndpoint').returns(0);
 const alexaTest = new ask.AlexaTest(skillHandler, skillSettings).withDynamoDBPersistence('vocab-skill', 'id', 'Vocab_List');
 
 describe('ReviewIntent', () => {

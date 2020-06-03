@@ -55,7 +55,7 @@ const InProgressReviewHandler = {
         attributes.word = word;
         attributes.semanticDef = semanticDef;
         attributes.wordlist = wordlist;
-        console.log(inference)
+        console.log(inference);
         if (inference.predict) {
             attributes.lastSpeech = `Congrats, ${lastWord} does mean ${inference.sentence}`;
         } else {
