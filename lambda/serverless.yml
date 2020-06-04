@@ -1,4 +1,4 @@
-org: sam3ay
+org: ${env:ORG}
 app: vocabskill
 # Welcome to Serverless!
 #
@@ -17,6 +17,8 @@ provider:
   runtime: nodejs12.x
   iamManagedPolicies:
     - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+    - arn:aws:iam::aws:policy/AmazonSageMakerReadOnly 
+    - arn:aws:iam::aws:policy/AWSLambdaFullAccess
 
 package:
     individually: true
