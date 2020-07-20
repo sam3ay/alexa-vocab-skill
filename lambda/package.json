@@ -15,7 +15,7 @@
     "ask-sdk": "^2.8.0",
     "ask-sdk-core": "^2.8.0",
     "got": "^10.7.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "winston": "^3.2.1"
   },
   "devDependencies": {
